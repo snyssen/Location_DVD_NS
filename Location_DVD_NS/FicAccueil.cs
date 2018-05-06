@@ -43,11 +43,15 @@ namespace Location_DVD_NS
                             boucle = true;
                     }
                     else
+                    {
+                        boucle = false;
                         this.Close();
+                    }
                 }
                 while (boucle);
             }
-            RemplirDGV();
+            if (System.IO.File.Exists(stab2[0]) || System.IO.File.Exists(dlgChargerDB.FileName))
+                RemplirDGV();
         }
 
         private void RemplirDGV()
