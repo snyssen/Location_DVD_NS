@@ -101,6 +101,7 @@
             this.dgvEmprunts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvEmprunts.Size = new System.Drawing.Size(240, 150);
             this.dgvEmprunts.TabIndex = 2;
+            this.dgvEmprunts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvEmprunts_CellDoubleClick);
             // 
             // dgvActeurs
             // 

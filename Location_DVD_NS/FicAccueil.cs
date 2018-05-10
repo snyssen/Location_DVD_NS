@@ -58,6 +58,10 @@ namespace Location_DVD_NS
         private void dgvClients_SelectionChanged(object sender, EventArgs e)
         {
             RemplirDGVEmprunt();
+            if (dgvClients.SelectedRows.Count != 1) // On ne calcule une éventuelle amende que si il n'y a qu'un seul client de sélectionné
+                tbAmende.Text = "N/A";
+            else
+                CalculerAmende((int)dgvClients.SelectedRows[0].Cells[0].Value);
         }
 
         private void btnAjouterEmprunt_Click(object sender, EventArgs e)
@@ -135,8 +139,16 @@ namespace Location_DVD_NS
                 RemplirDGVClient();
             }
         }
-        #endregion
 
+        private void dgvEmprunts_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvEmprunts.SelectedRows.Count == 1)
+            {
+                EcranDetailsEmprunt detailsEmprunt = new EcranDetailsEmprunt((int)dgvEmprunts.SelectedRows[0].Cells[0].Value, sChConn);
+                detailsEmprunt.ShowDialog();
+            }
+        }
+        #endregion
 
         #region Remplir DGVs
         private void RemplirDGV()
@@ -192,14 +204,6 @@ namespace Location_DVD_NS
                     }
                 }
             }
-            /*
-            List<C_T_Emprunt> lTmpEmprunt = new G_T_Emprunt(sChConn).Lire("Id_Emprunt");
-            foreach (C_T_Emprunt TmpEmprunt in lTmpEmprunt)
-            {
-                if (int.Parse(dgvClients.SelectedRows[0].Cells[0].Value.ToString()) == (int)TmpEmprunt.Id_Client) // Ne récupère les emprunts que du (des ?) client(s) sélectionné(s)
-                    dtEmprunts.Rows.Add(TmpEmprunt.Id_Emprunt, TmpEmprunt.E_Emprunt, "oui"); // DEBUG
-            }
-            */
             bsEmprunts = new BindingSource();
             bsEmprunts.DataSource = dtEmprunts;
             dgvEmprunts.DataSource = bsEmprunts;
@@ -270,6 +274,45 @@ namespace Location_DVD_NS
 
         #endregion
 
+        #region Méthodes
+        private void CalculerAmende(int ID_Client)
+        {
+            double amende = 0;
+            List<C_T_Emprunt> lTmpEmprunt = new G_T_Emprunt(sChConn).Lire("Id_Emprunt"); // Charge tous les emprunts
+            foreach (C_T_Emprunt TmpEmprunt in lTmpEmprunt) // Parcourt tous les emprunts
+            {
+                if (TmpEmprunt.Id_Client == ID_Client) // Si Id client de l'emprunt parcouru == Id client sélectionné...
+                {
+                    List<C_T_Quantite> lTmpQuantite = new G_T_Quantite(sChConn).Lire("Id_Quantite"); // Charge toutes les quantités
+                    foreach (C_T_Quantite TmpQuantite in lTmpQuantite) // Parcourt toutes les quantités
+                    {
+                        if (TmpQuantite.Id_Emprunt == TmpEmprunt.Id_Emprunt) // Si Id Quantité parcouru == Id Emprunt questionné...
+                        {
+                            if (TmpQuantite.Q_Retour == null) // Si la date de retour == null (=> DVD non retourné)...
+                            {
+                                List<C_T_DVD> lTmpDVD = new G_T_DVD(sChConn).Lire("Id_DVD"); // Charge tous les DVD
+                                foreach (C_T_DVD TmpDVD in lTmpDVD) // Parcourt tous les DVD
+                                {
+                                    if (TmpDVD.Id_DVD == TmpQuantite.Id_DVD) // Si IDs identiques => DVD repris dans l'emprunt
+                                    {
+                                        DateTime DateLimite = (DateTime)TmpEmprunt.E_Emprunt; // On récupère la date de l'emprunt...
+                                        DateLimite.AddDays((double)TmpDVD.D_Emprunt_Max); // Et on y ajoute la durée max d'emprunt du DVD pour déterminer la date limite de retour de ce DVD
+                                        TimeSpan tspan = DateTime.Today.Subtract(DateLimite); // On détermine la durée de temps entre aujourd'hui et la date limite de retour...
+                                        int retard = tspan.Days; // Et on la transforme en un nombre de jour => si > 0, retard; sinon encore dans les temps
+                                        if (retard > 0) // Si retard > 0 => retard => Amende à appliquer !
+                                        {
+                                            amende += (double)(retard * TmpDVD.D_Amende_p_J); // On ajoute donc à l'amende générale du client celle du DVD = nbr jour de retards * prix par jour de retard
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            tbAmende.Text = amende.ToString();
+        }
+
         private void WipeDatabase() // Supprime l'ensemble des entrées de la base de données
         {
             if (MessageBox.Show("VOUS VOUS APPRETEZ A SUPPRIMER L'ENSEMBLE DES ENTREES DE LA BASE DE DONNEES !\nEtes-vous sûr(e) de vouloir continuer ? (cette action est irréversible !)", "SUPPRIMER LES ENTREES DE LA BASE DE DONNEES ?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
@@ -306,5 +349,6 @@ namespace Location_DVD_NS
                 MessageBox.Show("La base de données est maintenant vide.", "Opération effectuée", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+        #endregion
     }
 }
