@@ -32,7 +32,12 @@
             this.dgvDVD = new System.Windows.Forms.DataGridView();
             this.dgvEmprunts = new System.Windows.Forms.DataGridView();
             this.dgvActeurs = new System.Windows.Forms.DataGridView();
+            this.NomActeur = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PrenomActeur = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BioActeur = new System.Windows.Forms.DataGridViewLinkColumn();
             this.pFiltreClients = new System.Windows.Forms.Panel();
+            this.lblAmende = new System.Windows.Forms.Label();
+            this.tbAmende = new System.Windows.Forms.TextBox();
             this.lblFiltreClients = new System.Windows.Forms.Label();
             this.rbtnFCRetardCot = new System.Windows.Forms.RadioButton();
             this.rbtnFCRetardRetour = new System.Windows.Forms.RadioButton();
@@ -43,21 +48,6 @@
             this.rbtnFDPret = new System.Windows.Forms.RadioButton();
             this.rbtnFDDispos = new System.Windows.Forms.RadioButton();
             this.rbtnFDTous = new System.Windows.Forms.RadioButton();
-            this.tbAmende = new System.Windows.Forms.TextBox();
-            this.lblAmende = new System.Windows.Forms.Label();
-            this.NomActeur = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PrenomActeur = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BioActeur = new System.Windows.Forms.DataGridViewLinkColumn();
-            this.IDClient = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dtgC_Nom = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dtgC_Prenom = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dtgC_Retard = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.IDDVD = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NomDVD = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EmpruntDVD = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.IDEmprunt = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date_Emprunt = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Retour_Emprunt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dlgChargerDB = new System.Windows.Forms.OpenFileDialog();
             this.btnAjouterClient = new System.Windows.Forms.Button();
             this.btnAjouterEmprunt = new System.Windows.Forms.Button();
@@ -76,17 +66,14 @@
             this.dgvClients.AllowUserToDeleteRows = false;
             this.dgvClients.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgvClients.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvClients.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.IDClient,
-            this.dtgC_Nom,
-            this.dtgC_Prenom,
-            this.dtgC_Retard});
             this.dgvClients.Location = new System.Drawing.Point(12, 12);
             this.dgvClients.Name = "dgvClients";
             this.dgvClients.ReadOnly = true;
             this.dgvClients.RowHeadersVisible = false;
+            this.dgvClients.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvClients.Size = new System.Drawing.Size(240, 150);
             this.dgvClients.TabIndex = 0;
+            this.dgvClients.SelectionChanged += new System.EventHandler(this.dgvClients_SelectionChanged);
             // 
             // dgvDVD
             // 
@@ -94,10 +81,6 @@
             this.dgvDVD.AllowUserToDeleteRows = false;
             this.dgvDVD.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgvDVD.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDVD.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.IDDVD,
-            this.NomDVD,
-            this.EmpruntDVD});
             this.dgvDVD.Location = new System.Drawing.Point(12, 288);
             this.dgvDVD.Name = "dgvDVD";
             this.dgvDVD.ReadOnly = true;
@@ -111,10 +94,6 @@
             this.dgvEmprunts.AllowUserToDeleteRows = false;
             this.dgvEmprunts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgvEmprunts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvEmprunts.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.IDEmprunt,
-            this.Date_Emprunt,
-            this.Retour_Emprunt});
             this.dgvEmprunts.Location = new System.Drawing.Point(419, 12);
             this.dgvEmprunts.Name = "dgvEmprunts";
             this.dgvEmprunts.ReadOnly = true;
@@ -139,6 +118,29 @@
             this.dgvActeurs.Size = new System.Drawing.Size(240, 150);
             this.dgvActeurs.TabIndex = 3;
             // 
+            // NomActeur
+            // 
+            this.NomActeur.HeaderText = "Nom";
+            this.NomActeur.Name = "NomActeur";
+            this.NomActeur.ReadOnly = true;
+            this.NomActeur.Width = 54;
+            // 
+            // PrenomActeur
+            // 
+            this.PrenomActeur.HeaderText = "Prénom";
+            this.PrenomActeur.Name = "PrenomActeur";
+            this.PrenomActeur.ReadOnly = true;
+            this.PrenomActeur.Width = 68;
+            // 
+            // BioActeur
+            // 
+            this.BioActeur.HeaderText = "En savoir plus";
+            this.BioActeur.Name = "BioActeur";
+            this.BioActeur.ReadOnly = true;
+            this.BioActeur.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.BioActeur.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.BioActeur.Width = 98;
+            // 
             // pFiltreClients
             // 
             this.pFiltreClients.Controls.Add(this.lblAmende);
@@ -152,6 +154,24 @@
             this.pFiltreClients.Name = "pFiltreClients";
             this.pFiltreClients.Size = new System.Drawing.Size(155, 149);
             this.pFiltreClients.TabIndex = 4;
+            // 
+            // lblAmende
+            // 
+            this.lblAmende.AutoSize = true;
+            this.lblAmende.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAmende.Location = new System.Drawing.Point(4, 109);
+            this.lblAmende.Name = "lblAmende";
+            this.lblAmende.Size = new System.Drawing.Size(105, 13);
+            this.lblAmende.TabIndex = 6;
+            this.lblAmende.Text = "Amende du client";
+            // 
+            // tbAmende
+            // 
+            this.tbAmende.Location = new System.Drawing.Point(7, 126);
+            this.tbAmende.Name = "tbAmende";
+            this.tbAmende.ReadOnly = true;
+            this.tbAmende.Size = new System.Drawing.Size(129, 20);
+            this.tbAmende.TabIndex = 5;
             // 
             // lblFiltreClients
             // 
@@ -258,117 +278,6 @@
             this.rbtnFDTous.Text = "Tous";
             this.rbtnFDTous.UseVisualStyleBackColor = true;
             // 
-            // tbAmende
-            // 
-            this.tbAmende.Location = new System.Drawing.Point(7, 126);
-            this.tbAmende.Name = "tbAmende";
-            this.tbAmende.ReadOnly = true;
-            this.tbAmende.Size = new System.Drawing.Size(129, 20);
-            this.tbAmende.TabIndex = 5;
-            // 
-            // lblAmende
-            // 
-            this.lblAmende.AutoSize = true;
-            this.lblAmende.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAmende.Location = new System.Drawing.Point(4, 109);
-            this.lblAmende.Name = "lblAmende";
-            this.lblAmende.Size = new System.Drawing.Size(105, 13);
-            this.lblAmende.TabIndex = 6;
-            this.lblAmende.Text = "Amende du client";
-            // 
-            // NomActeur
-            // 
-            this.NomActeur.HeaderText = "Nom";
-            this.NomActeur.Name = "NomActeur";
-            this.NomActeur.ReadOnly = true;
-            this.NomActeur.Width = 54;
-            // 
-            // PrenomActeur
-            // 
-            this.PrenomActeur.HeaderText = "Prénom";
-            this.PrenomActeur.Name = "PrenomActeur";
-            this.PrenomActeur.ReadOnly = true;
-            this.PrenomActeur.Width = 68;
-            // 
-            // BioActeur
-            // 
-            this.BioActeur.HeaderText = "En savoir plus";
-            this.BioActeur.Name = "BioActeur";
-            this.BioActeur.ReadOnly = true;
-            this.BioActeur.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.BioActeur.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.BioActeur.Width = 98;
-            // 
-            // IDClient
-            // 
-            this.IDClient.HeaderText = "ID";
-            this.IDClient.Name = "IDClient";
-            this.IDClient.ReadOnly = true;
-            this.IDClient.Width = 43;
-            // 
-            // dtgC_Nom
-            // 
-            this.dtgC_Nom.HeaderText = "Nom";
-            this.dtgC_Nom.Name = "dtgC_Nom";
-            this.dtgC_Nom.ReadOnly = true;
-            this.dtgC_Nom.Width = 54;
-            // 
-            // dtgC_Prenom
-            // 
-            this.dtgC_Prenom.HeaderText = "Prénom";
-            this.dtgC_Prenom.Name = "dtgC_Prenom";
-            this.dtgC_Prenom.ReadOnly = true;
-            this.dtgC_Prenom.Width = 68;
-            // 
-            // dtgC_Retard
-            // 
-            this.dtgC_Retard.HeaderText = "Retard (o/n)";
-            this.dtgC_Retard.Name = "dtgC_Retard";
-            this.dtgC_Retard.ReadOnly = true;
-            this.dtgC_Retard.Width = 90;
-            // 
-            // IDDVD
-            // 
-            this.IDDVD.HeaderText = "ID";
-            this.IDDVD.Name = "IDDVD";
-            this.IDDVD.ReadOnly = true;
-            this.IDDVD.Width = 43;
-            // 
-            // NomDVD
-            // 
-            this.NomDVD.HeaderText = "Nom";
-            this.NomDVD.Name = "NomDVD";
-            this.NomDVD.ReadOnly = true;
-            this.NomDVD.Width = 54;
-            // 
-            // EmpruntDVD
-            // 
-            this.EmpruntDVD.HeaderText = "Disponible (o/n)";
-            this.EmpruntDVD.Name = "EmpruntDVD";
-            this.EmpruntDVD.ReadOnly = true;
-            this.EmpruntDVD.Width = 98;
-            // 
-            // IDEmprunt
-            // 
-            this.IDEmprunt.HeaderText = "ID";
-            this.IDEmprunt.Name = "IDEmprunt";
-            this.IDEmprunt.ReadOnly = true;
-            this.IDEmprunt.Width = 43;
-            // 
-            // Date_Emprunt
-            // 
-            this.Date_Emprunt.HeaderText = "Date";
-            this.Date_Emprunt.Name = "Date_Emprunt";
-            this.Date_Emprunt.ReadOnly = true;
-            this.Date_Emprunt.Width = 55;
-            // 
-            // Retour_Emprunt
-            // 
-            this.Retour_Emprunt.HeaderText = "Retourné (o/n)";
-            this.Retour_Emprunt.Name = "Retour_Emprunt";
-            this.Retour_Emprunt.ReadOnly = true;
-            this.Retour_Emprunt.Width = 102;
-            // 
             // dlgChargerDB
             // 
             this.dlgChargerDB.FileName = "Location_DVD.mdf";
@@ -393,6 +302,7 @@
             this.btnAjouterEmprunt.TabIndex = 7;
             this.btnAjouterEmprunt.Text = "Nouvel emprunt";
             this.btnAjouterEmprunt.UseVisualStyleBackColor = true;
+            this.btnAjouterEmprunt.Click += new System.EventHandler(this.btnAjouterEmprunt_Click);
             // 
             // btnAjouterDVD
             // 
@@ -402,6 +312,7 @@
             this.btnAjouterDVD.TabIndex = 8;
             this.btnAjouterDVD.Text = "Nouveau DVD";
             this.btnAjouterDVD.UseVisualStyleBackColor = true;
+            this.btnAjouterDVD.Click += new System.EventHandler(this.btnAjouterDVD_Click);
             // 
             // EcranAccueil
             // 
@@ -450,16 +361,6 @@
         private System.Windows.Forms.RadioButton rbtnFDTous;
         private System.Windows.Forms.Label lblAmende;
         private System.Windows.Forms.TextBox tbAmende;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IDClient;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dtgC_Nom;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dtgC_Prenom;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dtgC_Retard;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IDDVD;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NomDVD;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EmpruntDVD;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IDEmprunt;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Date_Emprunt;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Retour_Emprunt;
         private System.Windows.Forms.DataGridViewTextBoxColumn NomActeur;
         private System.Windows.Forms.DataGridViewTextBoxColumn PrenomActeur;
         private System.Windows.Forms.DataGridViewLinkColumn BioActeur;
