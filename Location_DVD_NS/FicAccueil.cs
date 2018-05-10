@@ -20,6 +20,7 @@ namespace Location_DVD_NS
         private short IndexFiltreClient = 0, // 0 = tous / 1 = Retards (tous) / 2 = Retards (retour) / 3 = Retards (cotisation)
             IndexFiltreDVD = 0; // 0 = tous / 1 = Disponibles / 2 = En prêt
         private DataTable dtClients, dtEmprunts, dtDVD, dtActeurs;
+        private BindingSource bsClients, bsEmprunts, bsDVD, bsActeurs;
 
         public EcranAccueil()
         {
@@ -53,12 +54,11 @@ namespace Location_DVD_NS
                 RemplirDGV();
         }
 
+        #region Event handlers
         private void dgvClients_SelectionChanged(object sender, EventArgs e)
         {
             RemplirDGVEmprunt();
         }
-
-        private BindingSource bsClients, bsEmprunts, bsDVD, bsActeurs;
 
         private void btnAjouterEmprunt_Click(object sender, EventArgs e)
         {
@@ -71,7 +71,10 @@ namespace Location_DVD_NS
                 foreach (int ID in ajoutemprunt.Liste_ID_DVD_Emprunt)
                 {
                     new G_T_Quantite(sChConn).Ajouter(nID, ID, null);
+                    C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID(ID);
+                    new G_T_DVD(sChConn).Modifier(ID, TmpDVD.D_Nom, true, TmpDVD.D_Genre, TmpDVD.D_Emprunt_Max, TmpDVD.D_Amende_p_J, TmpDVD.D_Synopsis);
                 }
+                RemplirDGV();
             }
         }
 
@@ -97,8 +100,43 @@ namespace Location_DVD_NS
                 {
                     new G_T_Liste_Acteurs(sChConn).Ajouter(nID, ID);
                 }
+                RemplirDGVDVD();
             }
         }
+
+        private void btnAjouterClient_Click(object sender, EventArgs e)
+        {
+            EcranAjouterClient ajoutclient = new EcranAjouterClient();
+            ajoutclient.ShowDialog();
+            if (ajoutclient.confirmed)
+            {
+                int nID = new G_T_Client(sChConn).Ajouter(ajoutclient.NomClient, ajoutclient.PrenomClient);
+                dtClients.Rows.Add(nID, ajoutclient.NomClient, ajoutclient.PrenomClient);
+                RemplirDGVClient();
+            }
+        }
+
+        private void FiltreDVD_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton rb = (RadioButton)sender;
+            if (rb.Checked)
+            {
+                IndexFiltreDVD = short.Parse(rb.Tag.ToString());
+                RemplirDGVDVD();
+            }
+        }
+
+        private void FiltreClients_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton rb = (RadioButton)sender;
+            if (rb.Checked)
+            {
+                IndexFiltreClient = short.Parse(rb.Tag.ToString());
+                RemplirDGVClient();
+            }
+        }
+        #endregion
+
 
         #region Remplir DGVs
         private void RemplirDGV()
@@ -176,7 +214,23 @@ namespace Location_DVD_NS
             List<C_T_DVD> lTmpDVD = new G_T_DVD(sChConn).Lire("D_Nom");
             foreach (C_T_DVD TmpDVD in lTmpDVD)
             {
-                dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, TmpDVD.D_Emprunt ? "non" : "oui");
+                switch (IndexFiltreDVD)
+                {
+                    case 0: // Tous
+                        dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, TmpDVD.D_Emprunt ? "non" : "oui");
+                        break;
+                    case 1: // Disponibles
+                        if (!TmpDVD.D_Emprunt)
+                            dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, TmpDVD.D_Emprunt ? "non" : "oui");
+                        break;
+                    case 2: // En prêt
+                        if (TmpDVD.D_Emprunt)
+                            dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, TmpDVD.D_Emprunt ? "non" : "oui");
+                        break;
+                    default:
+                        MessageBox.Show("Erreur : IndexFiltreDVD invalide !");
+                        break;
+                }
             }
             bsDVD = new BindingSource();
             bsDVD.DataSource = dtDVD;
@@ -215,17 +269,6 @@ namespace Location_DVD_NS
         }
 
         #endregion
-
-        private void btnAjouterClient_Click(object sender, EventArgs e)
-        {
-            EcranAjouterClient ajoutclient = new EcranAjouterClient();
-            ajoutclient.ShowDialog();
-            if (ajoutclient.confirmed)
-            {
-                int nID = new G_T_Client(sChConn).Ajouter(ajoutclient.NomClient, ajoutclient.PrenomClient);
-                dtClients.Rows.Add(nID, ajoutclient.NomClient, ajoutclient.PrenomClient);
-            }
-        }
 
         private void WipeDatabase() // Supprime l'ensemble des entrées de la base de données
         {

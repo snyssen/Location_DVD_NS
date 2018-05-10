@@ -51,14 +51,14 @@
             this.tbNom.Location = new System.Drawing.Point(12, 29);
             this.tbNom.Name = "tbNom";
             this.tbNom.Size = new System.Drawing.Size(210, 20);
-            this.tbNom.TabIndex = 1;
+            this.tbNom.TabIndex = 0;
             // 
             // tbBio
             // 
             this.tbBio.Location = new System.Drawing.Point(12, 107);
             this.tbBio.Name = "tbBio";
             this.tbBio.Size = new System.Drawing.Size(210, 20);
-            this.tbBio.TabIndex = 3;
+            this.tbBio.TabIndex = 2;
             // 
             // lblBio
             // 
@@ -74,7 +74,7 @@
             this.tbPrenom.Location = new System.Drawing.Point(12, 68);
             this.tbPrenom.Name = "tbPrenom";
             this.tbPrenom.Size = new System.Drawing.Size(210, 20);
-            this.tbPrenom.TabIndex = 5;
+            this.tbPrenom.TabIndex = 1;
             // 
             // lblPrenom
             // 
@@ -82,7 +82,7 @@
             this.lblPrenom.Location = new System.Drawing.Point(13, 52);
             this.lblPrenom.Name = "lblPrenom";
             this.lblPrenom.Size = new System.Drawing.Size(43, 13);
-            this.lblPrenom.TabIndex = 4;
+            this.lblPrenom.TabIndex = 1;
             this.lblPrenom.Text = "Prénom";
             // 
             // btnConfirmer
@@ -90,7 +90,7 @@
             this.btnConfirmer.Location = new System.Drawing.Point(12, 134);
             this.btnConfirmer.Name = "btnConfirmer";
             this.btnConfirmer.Size = new System.Drawing.Size(210, 23);
-            this.btnConfirmer.TabIndex = 6;
+            this.btnConfirmer.TabIndex = 3;
             this.btnConfirmer.Text = "Confirmer";
             this.btnConfirmer.UseVisualStyleBackColor = true;
             this.btnConfirmer.Click += new System.EventHandler(this.btnConfirmer_Click);

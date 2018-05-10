@@ -163,20 +163,24 @@
             this.rbtnFCRetardCot.AutoSize = true;
             this.rbtnFCRetardCot.Location = new System.Drawing.Point(7, 89);
             this.rbtnFCRetardCot.Name = "rbtnFCRetardCot";
-            this.rbtnFCRetardCot.Size = new System.Drawing.Size(120, 17);
+            this.rbtnFCRetardCot.Size = new System.Drawing.Size(143, 17);
             this.rbtnFCRetardCot.TabIndex = 3;
-            this.rbtnFCRetardCot.Text = "Retardataires (DVD)";
+            this.rbtnFCRetardCot.Tag = "3";
+            this.rbtnFCRetardCot.Text = "Retardataires (Cotisation)";
             this.rbtnFCRetardCot.UseVisualStyleBackColor = true;
+            this.rbtnFCRetardCot.CheckedChanged += new System.EventHandler(this.FiltreClients_CheckedChanged);
             // 
             // rbtnFCRetardRetour
             // 
             this.rbtnFCRetardRetour.AutoSize = true;
             this.rbtnFCRetardRetour.Location = new System.Drawing.Point(7, 66);
             this.rbtnFCRetardRetour.Name = "rbtnFCRetardRetour";
-            this.rbtnFCRetardRetour.Size = new System.Drawing.Size(129, 17);
+            this.rbtnFCRetardRetour.Size = new System.Drawing.Size(124, 17);
             this.rbtnFCRetardRetour.TabIndex = 2;
-            this.rbtnFCRetardRetour.Text = "Retardataires (retours)";
+            this.rbtnFCRetardRetour.Tag = "2";
+            this.rbtnFCRetardRetour.Text = "Retardataires (retour)";
             this.rbtnFCRetardRetour.UseVisualStyleBackColor = true;
+            this.rbtnFCRetardRetour.CheckedChanged += new System.EventHandler(this.FiltreClients_CheckedChanged);
             // 
             // rbtnFCRetards
             // 
@@ -185,8 +189,10 @@
             this.rbtnFCRetards.Name = "rbtnFCRetards";
             this.rbtnFCRetards.Size = new System.Drawing.Size(117, 17);
             this.rbtnFCRetards.TabIndex = 1;
+            this.rbtnFCRetards.Tag = "1";
             this.rbtnFCRetards.Text = "Retardataires (tous)";
             this.rbtnFCRetards.UseVisualStyleBackColor = true;
+            this.rbtnFCRetards.CheckedChanged += new System.EventHandler(this.FiltreClients_CheckedChanged);
             // 
             // rbtnFCTous
             // 
@@ -197,8 +203,10 @@
             this.rbtnFCTous.Size = new System.Drawing.Size(49, 17);
             this.rbtnFCTous.TabIndex = 0;
             this.rbtnFCTous.TabStop = true;
+            this.rbtnFCTous.Tag = "0";
             this.rbtnFCTous.Text = "Tous";
             this.rbtnFCTous.UseVisualStyleBackColor = true;
+            this.rbtnFCTous.CheckedChanged += new System.EventHandler(this.FiltreClients_CheckedChanged);
             // 
             // pFiltreDVD
             // 
@@ -228,8 +236,10 @@
             this.rbtnFDPret.Name = "rbtnFDPret";
             this.rbtnFDPret.Size = new System.Drawing.Size(59, 17);
             this.rbtnFDPret.TabIndex = 2;
+            this.rbtnFDPret.Tag = "2";
             this.rbtnFDPret.Text = "En prêt";
             this.rbtnFDPret.UseVisualStyleBackColor = true;
+            this.rbtnFDPret.CheckedChanged += new System.EventHandler(this.FiltreDVD_CheckedChanged);
             // 
             // rbtnFDDispos
             // 
@@ -238,8 +248,10 @@
             this.rbtnFDDispos.Name = "rbtnFDDispos";
             this.rbtnFDDispos.Size = new System.Drawing.Size(79, 17);
             this.rbtnFDDispos.TabIndex = 1;
+            this.rbtnFDDispos.Tag = "1";
             this.rbtnFDDispos.Text = "Disponibles";
             this.rbtnFDDispos.UseVisualStyleBackColor = true;
+            this.rbtnFDDispos.CheckedChanged += new System.EventHandler(this.FiltreDVD_CheckedChanged);
             // 
             // rbtnFDTous
             // 
@@ -250,8 +262,10 @@
             this.rbtnFDTous.Size = new System.Drawing.Size(49, 17);
             this.rbtnFDTous.TabIndex = 0;
             this.rbtnFDTous.TabStop = true;
+            this.rbtnFDTous.Tag = "0";
             this.rbtnFDTous.Text = "Tous";
             this.rbtnFDTous.UseVisualStyleBackColor = true;
+            this.rbtnFDTous.CheckedChanged += new System.EventHandler(this.FiltreDVD_CheckedChanged);
             // 
             // dlgChargerDB
             // 
