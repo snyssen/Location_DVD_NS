@@ -32,9 +32,6 @@
             this.dgvDVD = new System.Windows.Forms.DataGridView();
             this.dgvEmprunts = new System.Windows.Forms.DataGridView();
             this.dgvActeurs = new System.Windows.Forms.DataGridView();
-            this.NomActeur = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PrenomActeur = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BioActeur = new System.Windows.Forms.DataGridViewLinkColumn();
             this.pFiltreClients = new System.Windows.Forms.Panel();
             this.lblAmende = new System.Windows.Forms.Label();
             this.tbAmende = new System.Windows.Forms.TextBox();
@@ -52,6 +49,7 @@
             this.btnAjouterClient = new System.Windows.Forms.Button();
             this.btnAjouterEmprunt = new System.Windows.Forms.Button();
             this.btnAjouterDVD = new System.Windows.Forms.Button();
+            this.btnWipeDB = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmprunts)).BeginInit();
@@ -85,8 +83,10 @@
             this.dgvDVD.Name = "dgvDVD";
             this.dgvDVD.ReadOnly = true;
             this.dgvDVD.RowHeadersVisible = false;
+            this.dgvDVD.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvDVD.Size = new System.Drawing.Size(240, 150);
             this.dgvDVD.TabIndex = 1;
+            this.dgvDVD.SelectionChanged += new System.EventHandler(this.dgvDVD_SelectionChanged);
             // 
             // dgvEmprunts
             // 
@@ -94,10 +94,11 @@
             this.dgvEmprunts.AllowUserToDeleteRows = false;
             this.dgvEmprunts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgvEmprunts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvEmprunts.Location = new System.Drawing.Point(419, 12);
+            this.dgvEmprunts.Location = new System.Drawing.Point(419, 13);
             this.dgvEmprunts.Name = "dgvEmprunts";
             this.dgvEmprunts.ReadOnly = true;
             this.dgvEmprunts.RowHeadersVisible = false;
+            this.dgvEmprunts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvEmprunts.Size = new System.Drawing.Size(240, 150);
             this.dgvEmprunts.TabIndex = 2;
             // 
@@ -107,39 +108,13 @@
             this.dgvActeurs.AllowUserToDeleteRows = false;
             this.dgvActeurs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgvActeurs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvActeurs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.NomActeur,
-            this.PrenomActeur,
-            this.BioActeur});
             this.dgvActeurs.Location = new System.Drawing.Point(419, 288);
             this.dgvActeurs.Name = "dgvActeurs";
             this.dgvActeurs.ReadOnly = true;
             this.dgvActeurs.RowHeadersVisible = false;
+            this.dgvActeurs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvActeurs.Size = new System.Drawing.Size(240, 150);
             this.dgvActeurs.TabIndex = 3;
-            // 
-            // NomActeur
-            // 
-            this.NomActeur.HeaderText = "Nom";
-            this.NomActeur.Name = "NomActeur";
-            this.NomActeur.ReadOnly = true;
-            this.NomActeur.Width = 54;
-            // 
-            // PrenomActeur
-            // 
-            this.PrenomActeur.HeaderText = "Prénom";
-            this.PrenomActeur.Name = "PrenomActeur";
-            this.PrenomActeur.ReadOnly = true;
-            this.PrenomActeur.Width = 68;
-            // 
-            // BioActeur
-            // 
-            this.BioActeur.HeaderText = "En savoir plus";
-            this.BioActeur.Name = "BioActeur";
-            this.BioActeur.ReadOnly = true;
-            this.BioActeur.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.BioActeur.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.BioActeur.Width = 98;
             // 
             // pFiltreClients
             // 
@@ -314,11 +289,21 @@
             this.btnAjouterDVD.UseVisualStyleBackColor = true;
             this.btnAjouterDVD.Click += new System.EventHandler(this.btnAjouterDVD_Click);
             // 
+            // btnWipeDB
+            // 
+            this.btnWipeDB.Location = new System.Drawing.Point(650, 430);
+            this.btnWipeDB.Name = "btnWipeDB";
+            this.btnWipeDB.Size = new System.Drawing.Size(15, 15);
+            this.btnWipeDB.TabIndex = 9;
+            this.btnWipeDB.UseVisualStyleBackColor = true;
+            this.btnWipeDB.Click += new System.EventHandler(this.btnWipeDB_Click);
+            // 
             // EcranAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(671, 450);
+            this.Controls.Add(this.btnWipeDB);
             this.Controls.Add(this.btnAjouterDVD);
             this.Controls.Add(this.btnAjouterEmprunt);
             this.Controls.Add(this.btnAjouterClient);
@@ -361,13 +346,11 @@
         private System.Windows.Forms.RadioButton rbtnFDTous;
         private System.Windows.Forms.Label lblAmende;
         private System.Windows.Forms.TextBox tbAmende;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NomActeur;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PrenomActeur;
-        private System.Windows.Forms.DataGridViewLinkColumn BioActeur;
         private System.Windows.Forms.OpenFileDialog dlgChargerDB;
         private System.Windows.Forms.Button btnAjouterClient;
         private System.Windows.Forms.Button btnAjouterEmprunt;
         private System.Windows.Forms.Button btnAjouterDVD;
+        private System.Windows.Forms.Button btnWipeDB;
     }
 }
 

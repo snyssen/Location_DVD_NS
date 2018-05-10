@@ -66,9 +66,9 @@ namespace Location_DVD_NS
                 {
                     string[] TmpTab = lTmp.Split('=');
                     TmpTab[1] = TmpTab[1].Remove(TmpTab[1].Length - 1);
-                    // DEBUG
-                    MessageBox.Show("ID = " + TmpTab[1]);
-                    Liste_Id_acteurs.Add(int.Parse(TmpTab[1]));
+                    if (!int.TryParse(TmpTab[1], out int TmpID))
+                        MessageBox.Show("Erreur lors de la récupération de l'ID de l'acteur !");
+                    Liste_Id_acteurs.Add(TmpID);
                 }
                 Confirmed = true;
                 lbListeActeurs.Items.Clear();
