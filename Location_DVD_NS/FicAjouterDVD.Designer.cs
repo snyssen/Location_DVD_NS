@@ -101,6 +101,12 @@
             // 
             // nudAmende_p_jour
             // 
+            this.nudAmende_p_jour.DecimalPlaces = 1;
+            this.nudAmende_p_jour.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.nudAmende_p_jour.Location = new System.Drawing.Point(11, 148);
             this.nudAmende_p_jour.Name = "nudAmende_p_jour";
             this.nudAmende_p_jour.Size = new System.Drawing.Size(211, 20);

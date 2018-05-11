@@ -100,11 +100,23 @@
     <Compile Include="FicAjouterEmprunt.Designer.cs">
       <DependentUpon>FicAjouterEmprunt.cs</DependentUpon>
     </Compile>
+    <Compile Include="FicDetailsDVD.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FicDetailsDVD.Designer.cs">
+      <DependentUpon>FicDetailsDVD.cs</DependentUpon>
+    </Compile>
     <Compile Include="FicDetailsEmprunt.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FicDetailsEmprunt.Designer.cs">
       <DependentUpon>FicDetailsEmprunt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FicModifyString.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FicModifyString.Designer.cs">
+      <DependentUpon>FicModifyString.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,8 +135,14 @@
     <EmbeddedResource Include="FicAjouterEmprunt.resx">
       <DependentUpon>FicAjouterEmprunt.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FicDetailsDVD.resx">
+      <DependentUpon>FicDetailsDVD.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FicDetailsEmprunt.resx">
       <DependentUpon>FicDetailsEmprunt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FicModifyString.resx">
+      <DependentUpon>FicModifyString.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

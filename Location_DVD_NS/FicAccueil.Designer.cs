@@ -86,6 +86,7 @@
             this.dgvDVD.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvDVD.Size = new System.Drawing.Size(240, 150);
             this.dgvDVD.TabIndex = 1;
+            this.dgvDVD.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDVD_CellDoubleClick);
             this.dgvDVD.SelectionChanged += new System.EventHandler(this.dgvDVD_SelectionChanged);
             // 
             // dgvEmprunts

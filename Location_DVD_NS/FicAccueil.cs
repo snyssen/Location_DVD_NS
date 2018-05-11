@@ -146,6 +146,17 @@ namespace Location_DVD_NS
             {
                 EcranDetailsEmprunt detailsEmprunt = new EcranDetailsEmprunt((int)dgvEmprunts.SelectedRows[0].Cells[0].Value, sChConn);
                 detailsEmprunt.ShowDialog();
+                RemplirDGV();
+            }
+        }
+
+        private void dgvDVD_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvDVD.SelectedRows.Count == 1)
+            {
+                EcranDetailsDVD detailsDVD = new EcranDetailsDVD((int)dgvDVD.SelectedRows[0].Cells[0].Value, sChConn);
+                detailsDVD.ShowDialog();
+                RemplirDGVDVD();
             }
         }
         #endregion
@@ -258,7 +269,7 @@ namespace Location_DVD_NS
                     {
                         if ((int)TmplActeur.Id_DVD == TmpID) // Si une des tables reprend le DVD sélectionné...
                         {
-                            foreach (C_T_Acteur TmpActeur in lTmpActeur) // On parcourt les acteurs
+                            foreach (C_T_Acteur TmpActeur in lTmpActeur) // On parcourt les acteurs                /!\ A SIMPLIFIER AVEC LIRE_ID /!\
                             {
                                 if ((int)TmpActeur.Id_Acteur == (int)TmplActeur.Id_Acteur) // Si l'acteur est repris dans la liste en cours...
                                     dtActeurs.Rows.Add(TmpActeur.A_Nom, TmpActeur.A_Prenom, TmpActeur.A_Bio);
@@ -298,7 +309,7 @@ namespace Location_DVD_NS
                                         DateTime DateLimite = (DateTime)TmpEmprunt.E_Emprunt; // On récupère la date de l'emprunt...
                                         DateLimite.AddDays((double)TmpDVD.D_Emprunt_Max); // Et on y ajoute la durée max d'emprunt du DVD pour déterminer la date limite de retour de ce DVD
                                         TimeSpan tspan = DateTime.Today.Subtract(DateLimite); // On détermine la durée de temps entre aujourd'hui et la date limite de retour...
-                                        int retard = tspan.Days; // Et on la transforme en un nombre de jour => si > 0, retard; sinon encore dans les temps
+                                        int retard = tspan.Days - 1; // Et on la transforme en un nombre de jour => si > 0, retard; sinon encore dans les temps ( -1 sinon il compte le jour limite de rentrée)
                                         if (retard > 0) // Si retard > 0 => retard => Amende à appliquer !
                                         {
                                             amende += (double)(retard * TmpDVD.D_Amende_p_J); // On ajoute donc à l'amende générale du client celle du DVD = nbr jour de retards * prix par jour de retard
