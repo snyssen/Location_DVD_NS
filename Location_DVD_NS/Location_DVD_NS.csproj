@@ -100,6 +100,12 @@
     <Compile Include="FicAjouterEmprunt.Designer.cs">
       <DependentUpon>FicAjouterEmprunt.cs</DependentUpon>
     </Compile>
+    <Compile Include="FicDetailsActeur.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FicDetailsActeur.Designer.cs">
+      <DependentUpon>FicDetailsActeur.cs</DependentUpon>
+    </Compile>
     <Compile Include="FicDetailsDVD.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,6 +140,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FicAjouterEmprunt.resx">
       <DependentUpon>FicAjouterEmprunt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FicDetailsActeur.resx">
+      <DependentUpon>FicDetailsActeur.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FicDetailsDVD.resx">
       <DependentUpon>FicDetailsDVD.cs</DependentUpon>

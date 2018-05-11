@@ -117,6 +117,7 @@
             this.dgvActeurs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvActeurs.Size = new System.Drawing.Size(240, 150);
             this.dgvActeurs.TabIndex = 3;
+            this.dgvActeurs.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvActeurs_CellDoubleClick);
             // 
             // pFiltreClients
             // 

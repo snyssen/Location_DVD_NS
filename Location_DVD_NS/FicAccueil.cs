@@ -61,7 +61,8 @@ namespace Location_DVD_NS
             if (dgvClients.SelectedRows.Count != 1) // On ne calcule une éventuelle amende que si il n'y a qu'un seul client de sélectionné
                 tbAmende.Text = "N/A";
             else
-                CalculerAmende((int)dgvClients.SelectedRows[0].Cells[0].Value);
+                tbAmende.Text = CalculerAmende((int)dgvClients.SelectedRows[0].Cells[0].Value).ToString();
+
         }
 
         private void btnAjouterEmprunt_Click(object sender, EventArgs e)
@@ -157,6 +158,16 @@ namespace Location_DVD_NS
                 EcranDetailsDVD detailsDVD = new EcranDetailsDVD((int)dgvDVD.SelectedRows[0].Cells[0].Value, sChConn);
                 detailsDVD.ShowDialog();
                 RemplirDGVDVD();
+            }
+        }
+
+        private void dgvActeurs_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvActeurs.SelectedRows.Count == 1)
+            {
+                EcranDetailsActeur detailsActeur = new EcranDetailsActeur((int)dgvActeurs.SelectedRows[0].Cells[3].Value, sChConn);
+                detailsActeur.ShowDialog();
+                RemplirDGVActeurs();
             }
         }
         #endregion
@@ -258,6 +269,7 @@ namespace Location_DVD_NS
             dtActeurs.Columns.Add("Nom");
             dtActeurs.Columns.Add("Prénom");
             dtActeurs.Columns.Add("En savoir plus");
+            dtActeurs.Columns.Add(new DataColumn("ID", System.Type.GetType("System.Int32")));
             if (dgvDVD.SelectedRows.Count > 0) // On s'assure qu'au moins une ligne est sélectionnée (POSSIBLEMENT INUTILE GRACE AU FOR, A VERIFIER)
             {
                 for (int i = 0; i < dgvDVD.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées
@@ -272,7 +284,7 @@ namespace Location_DVD_NS
                             foreach (C_T_Acteur TmpActeur in lTmpActeur) // On parcourt les acteurs                /!\ A SIMPLIFIER AVEC LIRE_ID /!\
                             {
                                 if ((int)TmpActeur.Id_Acteur == (int)TmplActeur.Id_Acteur) // Si l'acteur est repris dans la liste en cours...
-                                    dtActeurs.Rows.Add(TmpActeur.A_Nom, TmpActeur.A_Prenom, TmpActeur.A_Bio);
+                                    dtActeurs.Rows.Add(TmpActeur.A_Nom, TmpActeur.A_Prenom, TmpActeur.A_Bio, TmpActeur.Id_Acteur);
                             }
                         }
                     }
@@ -286,7 +298,7 @@ namespace Location_DVD_NS
         #endregion
 
         #region Méthodes
-        private void CalculerAmende(int ID_Client)
+        private double CalculerAmende(int ID_Client)
         {
             double amende = 0;
             List<C_T_Emprunt> lTmpEmprunt = new G_T_Emprunt(sChConn).Lire("Id_Emprunt"); // Charge tous les emprunts
@@ -321,7 +333,7 @@ namespace Location_DVD_NS
                     }
                 }
             }
-            tbAmende.Text = amende.ToString();
+            return amende;
         }
 
         private void WipeDatabase() // Supprime l'ensemble des entrées de la base de données

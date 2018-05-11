@@ -90,11 +90,13 @@ namespace Location_DVD_NS
             {
                 btnModif_Annul.Text = "Annuler";
                 btnConf_Quitter.Text = "Confirmer";
+                lblActeurs.Text = "Acteurs principaux (sélection)";
             }
             else
             {
                 btnModif_Annul.Text = "Modifier informations";
                 btnConf_Quitter.Text = "Quitter";
+                lblActeurs.Text = "Acteurs principaux";
             }
         }
 
