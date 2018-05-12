@@ -20,7 +20,7 @@ namespace Location_DVD_NS
         private C_T_DVD SelectedDVD;
         private string sChConn;
         private string InternetLink;
-        private bool Modifiying = false;
+        private bool Modifying = false;
         private int NbrActeurs = 0; // Nombres d'acteurs jouant dans le film = Nombre de tables Liste_Acteurs liées à ce DVD
         public EcranDetailsDVD(int _ID_DVD, string _sChConn)
         {
@@ -40,7 +40,7 @@ namespace Location_DVD_NS
 
             // Acteurs
             lbActeurs.Items.Clear();
-            if (!Modifiying) // On n'est pas en train de modifier les données => On n'affiche que les acteurs qui jouent dans le film
+            if (!Modifying) // On n'est pas en train de modifier les données => On n'affiche que les acteurs qui jouent dans le film
             {
                 List<C_T_Liste_Acteurs> lTmplActeur = new G_T_Liste_Acteurs(sChConn).Lire("Id_Liste_Acteurs"); // Toutes les listes d'acteurs
                 NbrActeurs = 0;
@@ -84,9 +84,9 @@ namespace Location_DVD_NS
 
         private void ChangeState()
         {
-            Modifiying = !Modifiying; // Inversion de Modifiying
-            tbNomFilm.Enabled = tbGenre.Enabled = btnModiferSynopsis.Enabled = nudEmpruntMax.Enabled = nudAmende_p_j.Enabled = lbActeurs.Enabled = Modifiying; // Active/Désactive tous les éléments pouvant être modifiés
-            if (Modifiying)
+            Modifying = !Modifying; // Inversion de Modifying
+            tbNomFilm.Enabled = tbGenre.Enabled = btnModiferSynopsis.Enabled = nudEmpruntMax.Enabled = nudAmende_p_j.Enabled = lbActeurs.Enabled = Modifying; // Active/Désactive tous les éléments pouvant être modifiés
+            if (Modifying)
             {
                 btnModif_Annul.Text = "Annuler";
                 btnConf_Quitter.Text = "Confirmer";
@@ -102,7 +102,7 @@ namespace Location_DVD_NS
 
         private void llblSynopsis_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!Modifiying)
+            if (!Modifying)
             {
                 if (InternetLink.StartsWith("https://") || InternetLink.StartsWith("http://"))
                 {
@@ -116,7 +116,7 @@ namespace Location_DVD_NS
 
         private void btnConf_Quitter_Click(object sender, EventArgs e)
         {
-            if (!Modifiying) // Quitter
+            if (!Modifying) // Quitter
             {
                 lbActeurs.Items.Clear();
                 lbClients_precedents.Items.Clear();
