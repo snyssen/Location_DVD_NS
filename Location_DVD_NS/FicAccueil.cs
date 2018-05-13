@@ -170,6 +170,16 @@ namespace Location_DVD_NS
                 RemplirDGVActeurs();
             }
         }
+
+        private void dgvClients_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvClients.SelectedRows.Count == 1)
+            {
+                EcranDetailsClient detailsClient = new EcranDetailsClient((int)dgvClients.SelectedRows[0].Cells[0].Value, sChConn);
+                detailsClient.ShowDialog();
+                RemplirDGVClient();
+            }
+        }
         #endregion
 
         #region Remplir DGVs

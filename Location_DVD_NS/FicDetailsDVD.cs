@@ -31,6 +31,7 @@ namespace Location_DVD_NS
         }
         private void RemplirDonnees()
         {
+            SelectedDVD = new G_T_DVD(sChConn).Lire_ID(SelectedDVD.Id_DVD);
             this.Text = "DVD n°" + SelectedDVD.Id_DVD;
             tbNomFilm.Text = SelectedDVD.D_Nom;
             tbGenre.Text = SelectedDVD.D_Genre;

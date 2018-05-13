@@ -30,6 +30,7 @@ namespace Location_DVD_NS
 
         private void RemplirDonnees()
         {
+            SelectedActeur = new G_T_Acteur(sChConn).Lire_ID(SelectedActeur.Id_Acteur);
             this.Text = "Acteur n°" + SelectedActeur.Id_Acteur;
             tbNomActeur.Text = SelectedActeur.A_Nom;
             tbPrenomActeur.Text = SelectedActeur.A_Prenom;
