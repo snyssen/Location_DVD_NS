@@ -14,6 +14,7 @@ namespace Location_DVD_NS
     {
         public string NomClient;
         public string PrenomClient;
+        public DateTime DateCotisation;
         public bool confirmed = false;
         public EcranAjouterClient()
         {
@@ -28,6 +29,7 @@ namespace Location_DVD_NS
             {
                 NomClient = tbNom.Text;
                 PrenomClient = tbPrenom.Text;
+                DateCotisation = DateTime.Today;
                 confirmed = true;
                 this.Close();
             }

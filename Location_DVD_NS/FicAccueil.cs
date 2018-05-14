@@ -51,7 +51,9 @@ namespace Location_DVD_NS
                 while (boucle);
             }
             if (System.IO.File.Exists(stab2[0]) || System.IO.File.Exists(dlgChargerDB.FileName))
+            {
                 RemplirDGV();
+            }
         }
 
         #region Event handlers
@@ -115,7 +117,7 @@ namespace Location_DVD_NS
             ajoutclient.ShowDialog();
             if (ajoutclient.confirmed)
             {
-                int nID = new G_T_Client(sChConn).Ajouter(ajoutclient.NomClient, ajoutclient.PrenomClient);
+                int nID = new G_T_Client(sChConn).Ajouter(ajoutclient.NomClient, ajoutclient.PrenomClient, ajoutclient.DateCotisation);
                 dtClients.Rows.Add(nID, ajoutclient.NomClient, ajoutclient.PrenomClient);
                 RemplirDGVClient();
             }
@@ -197,9 +199,10 @@ namespace Location_DVD_NS
             dtClients.Columns.Add(new DataColumn("ID", System.Type.GetType("System.Int32")));
             dtClients.Columns.Add("Nom");
             dtClients.Columns.Add("Prénom");
+            dtClients.Columns.Add("Dernier paiement cotisation");
             List<C_T_Client> lTmpClient = new G_T_Client(sChConn).Lire("C_Nom");
             foreach (C_T_Client TmpClient in lTmpClient)
-                dtClients.Rows.Add(TmpClient.Id_Client, TmpClient.C_Nom, TmpClient.C_Prenom);
+                dtClients.Rows.Add(TmpClient.Id_Client, TmpClient.C_Nom, TmpClient.C_Prenom, TmpClient.C_Cotisation);
             bsClients = new BindingSource();
             bsClients.DataSource = dtClients;
             dgvClients.DataSource = bsClients;
@@ -209,30 +212,27 @@ namespace Location_DVD_NS
         {
             dtEmprunts = new DataTable();
             dtEmprunts.Columns.Add(new DataColumn("ID", System.Type.GetType("System.Int32")));
-            dtEmprunts.Columns.Add(new DataColumn("Date", System.Type.GetType("System.DateTime"))); // Type date ???
+            dtEmprunts.Columns.Add(new DataColumn("Date", System.Type.GetType("System.DateTime")));
             dtEmprunts.Columns.Add("Retourné (o/n)");
-            if (dgvClients.SelectedRows.Count > 0) // On s'assure qu'au moins une ligne est sélectionnée (POSSIBLEMENT INUTILE GRACE AU FOR, A VERIFIER)
+            for (int i = 0; i < dgvClients.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées (dans la DGV client)
             {
-                for (int i = 0; i < dgvClients.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées
+                int TmpID = (int)dgvClients.SelectedRows[i].Cells[0].Value;
+                List<C_T_Emprunt> lTmpEmprunt = new G_T_Emprunt(sChConn).Lire("Id_Emprunt"); // Tous les emprunts
+                List<C_T_Quantite> lTmpQuantite = new G_T_Quantite(sChConn).Lire("Id_Quantite"); // Toutes les quantités
+                foreach (C_T_Emprunt TmpEmprunt in lTmpEmprunt) // On parcourt les emprunts
                 {
-                    int TmpID = (int)dgvClients.SelectedRows[i].Cells[0].Value;
-                    List<C_T_Emprunt> lTmpEmprunt = new G_T_Emprunt(sChConn).Lire("Id_Emprunt"); // Tous les emprunts
-                    List<C_T_Quantite> lTmpQuantite = new G_T_Quantite(sChConn).Lire("Id_Quantite"); // Toutes les quantités
-                    foreach (C_T_Emprunt TmpEmprunt in lTmpEmprunt) // On parcourt les emprunts
+                    if ((int)TmpEmprunt.Id_Client == TmpID) // Si une des tables reprend le client sélectionné...
                     {
-                        if ((int)TmpEmprunt.Id_Client == TmpID) // Si une des tables reprend le client sélectionné...
+                        bool Retour = true; // Vrai si tous les DVD de l'emprunt ont été retournés, sinon faux
+                        foreach (C_T_Quantite TmpQuantite in lTmpQuantite) // On parcourt les quantités
                         {
-                            bool Retour = true; // Vrai si tous les DVD de l'emprunt ont été retournés, sinon faux
-                            foreach (C_T_Quantite TmpQuantite in lTmpQuantite) // On parcourt les quantités
+                            if ((int)TmpQuantite.Id_Emprunt == (int)TmpEmprunt.Id_Emprunt) // Si la quantité est reprise dans la liste en cours...
                             {
-                                if ((int)TmpQuantite.Id_Emprunt == (int)TmpEmprunt.Id_Emprunt) // Si la quantité est reprise dans la liste en cours...
-                                {
-                                    if (TmpQuantite.Q_Retour == null) // Est-ce que ce DVD a été retourné ?
-                                        Retour = false; // Si ne serait-ce qu'un seul DVD de l'emprunt actuel n'est pas retourné, Retour est mis à faux
-                                }
+                                if (TmpQuantite.Q_Retour == null) // Est-ce que ce DVD a été retourné ?
+                                    Retour = false; // Si ne serait-ce qu'un seul DVD de l'emprunt actuel n'est pas retourné, Retour est mis à faux
                             }
-                            dtEmprunts.Rows.Add(TmpEmprunt.Id_Emprunt, TmpEmprunt.E_Emprunt, Retour ? "oui" : "non");
                         }
+                        dtEmprunts.Rows.Add(TmpEmprunt.Id_Emprunt, TmpEmprunt.E_Emprunt, Retour ? "oui" : "non");
                     }
                 }
             }
@@ -280,22 +280,19 @@ namespace Location_DVD_NS
             dtActeurs.Columns.Add("Prénom");
             dtActeurs.Columns.Add("En savoir plus");
             dtActeurs.Columns.Add(new DataColumn("ID", System.Type.GetType("System.Int32")));
-            if (dgvDVD.SelectedRows.Count > 0) // On s'assure qu'au moins une ligne est sélectionnée (POSSIBLEMENT INUTILE GRACE AU FOR, A VERIFIER)
+            for (int i = 0; i < dgvDVD.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées (dans la DGV DVD)
             {
-                for (int i = 0; i < dgvDVD.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées
+                int TmpID = (int)dgvDVD.SelectedRows[i].Cells[0].Value;
+                List<C_T_Liste_Acteurs> lTmplActeur = new G_T_Liste_Acteurs(sChConn).Lire("Id_Liste_Acteurs"); // Toutes les listes d'acteurs
+                List<C_T_Acteur> lTmpActeur = new G_T_Acteur(sChConn).Lire("Id_Acteur"); // Tous les acteurs
+                foreach (C_T_Liste_Acteurs TmplActeur in lTmplActeur) // On parcourt la liste d'acteurs
                 {
-                    int TmpID = (int)dgvDVD.SelectedRows[i].Cells[0].Value;
-                    List<C_T_Liste_Acteurs> lTmplActeur = new G_T_Liste_Acteurs(sChConn).Lire("Id_Liste_Acteurs"); // Toutes les listes d'acteurs
-                    List<C_T_Acteur> lTmpActeur = new G_T_Acteur(sChConn).Lire("Id_Acteur"); // Tous les acteurs
-                    foreach (C_T_Liste_Acteurs TmplActeur in lTmplActeur) // On parcourt la liste d'acteurs
+                    if ((int)TmplActeur.Id_DVD == TmpID) // Si une des tables reprend le DVD sélectionné...
                     {
-                        if ((int)TmplActeur.Id_DVD == TmpID) // Si une des tables reprend le DVD sélectionné...
+                        foreach (C_T_Acteur TmpActeur in lTmpActeur) // On parcourt les acteurs                /!\ A SIMPLIFIER AVEC LIRE_ID /!\
                         {
-                            foreach (C_T_Acteur TmpActeur in lTmpActeur) // On parcourt les acteurs                /!\ A SIMPLIFIER AVEC LIRE_ID /!\
-                            {
-                                if ((int)TmpActeur.Id_Acteur == (int)TmplActeur.Id_Acteur) // Si l'acteur est repris dans la liste en cours...
-                                    dtActeurs.Rows.Add(TmpActeur.A_Nom, TmpActeur.A_Prenom, TmpActeur.A_Bio, TmpActeur.Id_Acteur);
-                            }
+                            if ((int)TmpActeur.Id_Acteur == (int)TmplActeur.Id_Acteur) // Si l'acteur est repris dans la liste en cours...
+                                dtActeurs.Rows.Add(TmpActeur.A_Nom, TmpActeur.A_Prenom, TmpActeur.A_Bio, TmpActeur.Id_Acteur);
                         }
                     }
                 }

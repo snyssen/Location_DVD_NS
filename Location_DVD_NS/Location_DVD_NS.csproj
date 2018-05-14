@@ -48,13 +48,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Acces">
+    <Reference Include="Acces, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Projet_LOCATION_DVD\Gestion\bin\Debug\Acces.dll</HintPath>
     </Reference>
-    <Reference Include="Classes">
+    <Reference Include="Classes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Projet_LOCATION_DVD\Gestion\bin\Debug\Classes.dll</HintPath>
     </Reference>
-    <Reference Include="Gestion">
+    <Reference Include="Gestion, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Projet_LOCATION_DVD\Gestion\bin\Debug\Gestion.dll</HintPath>
     </Reference>
     <Reference Include="System" />
