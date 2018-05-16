@@ -17,10 +17,10 @@ namespace Location_DVD_NS
     public partial class EcranAccueil : Form
     {
         private string sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\picho\Nextcloud\Cours\Informatique\2e bac\POO\Q2\db\Location_DVD.mdf;Integrated Security=True";
-        private short IndexFiltreClient = 0, // 0 = tous / 1 = Retards (tous) / 2 = Retards (retour) / 3 = Retards (cotisation)
+        private short IndexFiltreClient = 0, // 0 = tous / 1 = Retards (tous) / 2 = Retards (retour) / 3 = Retards (cotisation) / 4 = En ordre
             IndexFiltreDVD = 0; // 0 = tous / 1 = Disponibles / 2 = En prêt
-        private DataTable dtClients, dtEmprunts, dtDVD, dtActeurs;
-        private BindingSource bsClients, bsEmprunts, bsDVD, bsActeurs;
+        private DataTable dtClients, dtEmprunts, dtDVD, dtActeurs, dtDVDEmprunt;
+        private BindingSource bsClients, bsEmprunts, bsDVD, bsActeurs, bsDVDEmprunt;
 
         public EcranAccueil()
         {
@@ -90,6 +90,11 @@ namespace Location_DVD_NS
             RemplirDGVActeurs();
         }
 
+        private void dgvEmprunts_SelectionChanged(object sender, EventArgs e)
+        {
+            RemplirDGVDVDEmprunt();
+        }
+
         private void btnWipeDB_Click(object sender, EventArgs e)
         {
             WipeDatabase();
@@ -139,7 +144,18 @@ namespace Location_DVD_NS
             if (rb.Checked)
             {
                 IndexFiltreClient = short.Parse(rb.Tag.ToString());
-                RemplirDGVClient();
+                if (IndexFiltreClient == 0)
+                    bsClients.Filter = null;
+                if (IndexFiltreClient == 1)
+                    //bsClients.Filter = "ID = '10'";
+                    bsClients.Filter = "'Retard(s)' = 'Cotisation et Retour'";
+                if (IndexFiltreClient == 2)
+                    bsClients.Filter = "'Retard(s)' = 'Retour'";
+                if (IndexFiltreClient == 3)
+                    bsClients.Filter = "'Retard(s)' = 'Cotisation'";
+                if (IndexFiltreClient == 4)
+                    bsClients.Filter = "'Retard(s)' = 'Non'";
+                //RemplirDGVClient();
             }
         }
 
@@ -173,6 +189,38 @@ namespace Location_DVD_NS
             }
         }
 
+        private void btnRetourDVD_Click(object sender, EventArgs e)
+        {
+            if (dgvDVDEmprunt.SelectedRows.Count <= 0)
+                MessageBox.Show("Veuillez sélectionner au moins un DVD à rentrer avant d'effectuer cette action SVP.");
+            else
+            {
+                int i, j = 0;
+                for (i = 0; i < dgvDVDEmprunt.SelectedRows.Count; i++)
+                {
+                    C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID((int)dgvDVDEmprunt.SelectedRows[i].Cells[0].Value);
+                    if (TmpDVD.D_Emprunt) // On vérifie que le DVD n'a pas déjà été retourné
+                    {
+                        new G_T_DVD(sChConn).Modifier(TmpDVD.Id_DVD, TmpDVD.D_Nom, false, TmpDVD.D_Genre, TmpDVD.D_Emprunt_Max, TmpDVD.D_Amende_p_J, TmpDVD.D_Synopsis); // On change le bool d'emprunt du DVD à false => le DVD est à nouveau disponible
+                        List<C_T_Quantite> lTmpQuantite = new G_T_Quantite(sChConn).Lire("Id_Quantite");
+                        foreach (C_T_Quantite TmpQuantite in lTmpQuantite)
+                        {
+                            if (TmpQuantite.Id_DVD == TmpDVD.Id_DVD && TmpQuantite.Id_Emprunt == (int)dgvDVDEmprunt.SelectedRows[i].Cells[0].Value) // Important de confirmer les 2 conditions pour ne pas modifier la date de rentrée d'un autre emprunt
+                            {
+                                new G_T_Quantite(sChConn).Modifier(TmpQuantite.Id_Quantite, TmpQuantite.Id_Emprunt, TmpQuantite.Id_DVD, DateTime.Today); // On met la date du jour comme date de rentrée
+                            }
+                        }
+                    }
+                    else
+                        j++;
+                }
+                MessageBox.Show((i - j) + " DVD récupérés");
+                RemplirDGVDVD();
+                RemplirDGVEmprunt();
+                RemplirDGVDVDEmprunt();
+            }
+        }
+
         private void dgvClients_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dgvClients.SelectedRows.Count == 1)
@@ -191,6 +239,7 @@ namespace Location_DVD_NS
             RemplirDGVEmprunt();
             RemplirDGVDVD();
             RemplirDGVActeurs();
+            RemplirDGVDVDEmprunt();
         }
 
         private void RemplirDGVClient()
@@ -200,9 +249,21 @@ namespace Location_DVD_NS
             dtClients.Columns.Add("Nom");
             dtClients.Columns.Add("Prénom");
             dtClients.Columns.Add("Dernier paiement cotisation");
+            dtClients.Columns.Add("Retard(s)");
             List<C_T_Client> lTmpClient = new G_T_Client(sChConn).Lire("C_Nom");
             foreach (C_T_Client TmpClient in lTmpClient)
-                dtClients.Rows.Add(TmpClient.Id_Client, TmpClient.C_Nom, TmpClient.C_Prenom, TmpClient.C_Cotisation);
+            {
+                string retard;
+                if (CalculerRetardCot((DateTime)TmpClient.C_Cotisation) && CalculerAmende(TmpClient.Id_Client) > 0)
+                    retard = "Cotisation et Retour";
+                else if (CalculerRetardCot((DateTime)TmpClient.C_Cotisation))
+                    retard = "Cotisation";
+                else if (CalculerAmende(TmpClient.Id_Client) > 0)
+                    retard = "Retour";
+                else
+                    retard = "Non";
+                dtClients.Rows.Add(TmpClient.Id_Client, TmpClient.C_Nom, TmpClient.C_Prenom, TmpClient.C_Cotisation, retard);
+            }
             bsClients = new BindingSource();
             bsClients.DataSource = dtClients;
             dgvClients.DataSource = bsClients;
@@ -302,10 +363,38 @@ namespace Location_DVD_NS
             dgvActeurs.DataSource = bsActeurs;
         }
 
+        private void RemplirDGVDVDEmprunt()
+        {
+            dtDVDEmprunt = new DataTable();
+            dtDVDEmprunt.Columns.Add(new DataColumn("ID", System.Type.GetType("System.Int32")));
+            dtDVDEmprunt.Columns.Add("Nom");
+            dtDVDEmprunt.Columns.Add("Date limite retour");
+            dtDVDEmprunt.Columns.Add("Rentré le");
+            dtDVDEmprunt.Columns.Add("Retard (o/n)");
+            for (int i = 0; i < dgvEmprunts.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées (dans la DGV Emprunt)
+            {
+                int TmpID = (int)dgvEmprunts.SelectedRows[i].Cells[0].Value;
+                C_T_Emprunt SelectedEmprunt = new G_T_Emprunt(sChConn).Lire_ID(TmpID);
+                List<C_T_Quantite> lTmpQuantite = new G_T_Quantite(sChConn).Lire("Id_Quantite");
+                foreach (C_T_Quantite TmpQuantite in lTmpQuantite)
+                {
+                    if (TmpQuantite.Id_Emprunt == TmpID)
+                    {
+                        C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID((int)TmpQuantite.Id_DVD);
+                        DateTime DateEmprunt = (DateTime)SelectedEmprunt.E_Emprunt;
+                        dtDVDEmprunt.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max).ToString(), TmpQuantite.Q_Retour == null ? "Non rentré" : TmpQuantite.Q_Retour.ToString(), TmpQuantite.Q_Retour == null ? (DateTime.Today > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "oui" : "non") : (TmpQuantite.Q_Retour > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "oui" : "non"));
+                    }
+                }
+            }
+            bsDVDEmprunt = new BindingSource();
+            bsDVDEmprunt.DataSource = dtDVDEmprunt;
+            dgvDVDEmprunt.DataSource = bsDVDEmprunt;
+        }
+
         #endregion
 
         #region Méthodes
-        private double CalculerAmende(int ID_Client)
+        public double CalculerAmende(int ID_Client)
         {
             double amende = 0;
             List<C_T_Emprunt> lTmpEmprunt = new G_T_Emprunt(sChConn).Lire("Id_Emprunt"); // Charge tous les emprunts
@@ -341,6 +430,16 @@ namespace Location_DVD_NS
                 }
             }
             return amende;
+        }
+
+        public bool CalculerRetardCot(DateTime DateCot) // retourne vrai 
+        {
+            //if (DateTime.Today.Date > DateCot.Date.AddMonths(1))
+            // DEBUG
+            if (DateTime.Today.Date > DateCot.Date.AddDays(1))
+                return true;
+            else
+                return false;
         }
 
         private void WipeDatabase() // Supprime l'ensemble des entrées de la base de données

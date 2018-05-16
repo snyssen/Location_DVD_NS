@@ -28,12 +28,13 @@ namespace Location_DVD_NS
             RemplirListeDVD();
         }
 
-        private void RemplirListeClients() // PAS ENCORE DE CONDITION SUR LES RETARDS DU CLIENTS !!!
+        private void RemplirListeClients()
         {
             lbClientEmprunt.Items.Clear();
             List<C_T_Client> lTmpClient = new G_T_Client(sChConn).Lire("Id_Client");
             foreach (C_T_Client TmpClient in lTmpClient)
-                lbClientEmprunt.Items.Add(TmpClient.C_Nom.ToString() + " " + TmpClient.C_Prenom.ToString() + " (ID=" + TmpClient.Id_Client + ")");
+                if (!new EcranAccueil().CalculerRetardCot((DateTime)TmpClient.C_Cotisation))
+                    lbClientEmprunt.Items.Add(TmpClient.C_Nom.ToString() + " " + TmpClient.C_Prenom.ToString() + " (ID=" + TmpClient.Id_Client + ")");
         }
         private void RemplirListeDVD()
         {
