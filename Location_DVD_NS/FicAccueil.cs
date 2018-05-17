@@ -17,12 +17,11 @@ namespace Location_DVD_NS
     public partial class EcranAccueil : Form
     {
         private string sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\picho\Nextcloud\Cours\Informatique\2e bac\POO\Q2\db\Location_DVD.mdf;Integrated Security=True";
-        private short IndexFiltreClient = 0, // 0 = tous / 1 = Retards (tous) / 2 = Retards (retour) / 3 = Retards (cotisation) / 4 = En ordre
-            IndexFiltreDVD = 0; // 0 = tous / 1 = Disponibles / 2 = En prêt
         private DataTable dtClients, dtEmprunts, dtDVD, dtActeurs, dtDVDEmprunt;
         private BindingSource bsClients, bsEmprunts, bsDVD, bsActeurs, bsDVDEmprunt;
 
-        public EcranAccueil()
+        #region Constructeurs
+        public EcranAccueil() // Constructeur par défaut
         {
             InitializeComponent();
             string[] stab = sChConn.Split('=');
@@ -55,11 +54,17 @@ namespace Location_DVD_NS
                 RemplirDGV();
             }
         }
+        public EcranAccueil(bool Active) // Constructeur "poubelle" pour accès aux méthodes du form
+        {
+
+        }
+        #endregion
 
         #region Event handlers
         private void dgvClients_SelectionChanged(object sender, EventArgs e)
         {
-            RemplirDGVEmprunt();
+            if (!cbTousEmprunts.Checked)
+                RemplirDGVEmprunt();
             if (dgvClients.SelectedRows.Count != 1) // On ne calcule une éventuelle amende que si il n'y a qu'un seul client de sélectionné
                 tbAmende.Text = "N/A";
             else
@@ -93,6 +98,19 @@ namespace Location_DVD_NS
         private void dgvEmprunts_SelectionChanged(object sender, EventArgs e)
         {
             RemplirDGVDVDEmprunt();
+            if (cbTousEmprunts.Checked) // On veut sélectionner les clients qui ont fait le/les emprunt(s) sélectionné(s)
+            {
+                dgvClients.ClearSelection();
+                for (int i = 0; i < dgvEmprunts.SelectedRows.Count; i++)
+                {
+                    int TmpID = (int)dgvEmprunts.SelectedRows[i].Cells[0].Value;
+                    C_T_Emprunt TmpEmprunt = new G_T_Emprunt(sChConn).Lire_ID(TmpID);
+                    for (int j = 0; j < dgvClients.RowCount; j++)
+                    {
+                        // WIP
+                    }
+                }
+            }
         }
 
         private void btnWipeDB_Click(object sender, EventArgs e)
@@ -133,8 +151,21 @@ namespace Location_DVD_NS
             RadioButton rb = (RadioButton)sender;
             if (rb.Checked)
             {
-                IndexFiltreDVD = short.Parse(rb.Tag.ToString());
-                RemplirDGVDVD();
+                short IndexFiltreDVD = short.Parse(rb.Tag.ToString());
+                switch (IndexFiltreDVD)
+                {
+                    case 0: // tous
+                        bsDVD.Filter = null;
+                        break;
+                    case 1: // Disponibles
+                        bsDVD.Filter = "[Disponible (o/n)] = 'Oui'";
+                        //bsDVD.Filter = String.Format("'Disponible (o/n)' = 'Non'");
+                        break;
+                    case 2: // En prêt
+                        bsDVD.Filter = "[Disponible (o/n)] = 'Non'";
+                        break;
+                }
+                //RemplirDGVDVD();
             }
         }
 
@@ -143,18 +174,36 @@ namespace Location_DVD_NS
             RadioButton rb = (RadioButton)sender;
             if (rb.Checked)
             {
-                IndexFiltreClient = short.Parse(rb.Tag.ToString());
-                if (IndexFiltreClient == 0)
-                    bsClients.Filter = null;
-                if (IndexFiltreClient == 1)
-                    //bsClients.Filter = "ID = '10'";
-                    bsClients.Filter = "'Retard(s)' = 'Cotisation et Retour'";
-                if (IndexFiltreClient == 2)
-                    bsClients.Filter = "'Retard(s)' = 'Retour'";
-                if (IndexFiltreClient == 3)
-                    bsClients.Filter = "'Retard(s)' = 'Cotisation'";
-                if (IndexFiltreClient == 4)
-                    bsClients.Filter = "'Retard(s)' = 'Non'";
+                short IndexFiltreClient = short.Parse(rb.Tag.ToString());
+                switch (IndexFiltreClient)
+                {
+                    case 0: // Tous
+                        bsClients.Filter = null;
+                        break;
+                    case 1: // En ordre
+                        bsClients.Filter = "'Retard(s)' = 'Non'";
+                        //bsClients.Filter = "'Retard(s)' = 'Cotisation et Retour'";
+                        break;
+                    case 2: // Retard (tous)
+                        bsClients.Filter = "'Retard(s)' = 'Retour' OR 'Retard(s)' = 'Cotisation' OR 'Retard(s)' = 'Cotisation et Retour'";
+                        break;
+                    case 3: // Retard (retour)
+                        bsClients.Filter = "'Retard(s)' = 'Retour' OR 'Retard(s)' = 'Cotisation et Retour'";
+                        break;
+                    case 4: // Retard (cotisation)
+                        bsClients.Filter = "'Retard(s)' = 'Cotisation' OR 'Retard(s)' = 'Cotisation et Retour'";
+                        break;
+                }
+                //if (IndexFiltreClient == 0)
+                //    bsClients.Filter = null;
+                //if (IndexFiltreClient == 1)
+                //    bsClients.Filter = "'Retard(s)' = 'Cotisation et Retour'";
+                //if (IndexFiltreClient == 2)
+                //    bsClients.Filter = "'Retard(s)' = 'Retour'";
+                //if (IndexFiltreClient == 3)
+                //    bsClients.Filter = "'Retard(s)' = 'Cotisation'";
+                //if (IndexFiltreClient == 4)
+                //    bsClients.Filter = "'Retard(s)' = 'Non'";
                 //RemplirDGVClient();
             }
         }
@@ -242,6 +291,11 @@ namespace Location_DVD_NS
             RemplirDGVDVDEmprunt();
         }
 
+        private void cbTousEmprunts_CheckedChanged(object sender, EventArgs e)
+        {
+            RemplirDGVEmprunt();
+        }
+
         private void RemplirDGVClient()
         {
             dtClients = new DataTable();
@@ -275,25 +329,46 @@ namespace Location_DVD_NS
             dtEmprunts.Columns.Add(new DataColumn("ID", System.Type.GetType("System.Int32")));
             dtEmprunts.Columns.Add(new DataColumn("Date", System.Type.GetType("System.DateTime")));
             dtEmprunts.Columns.Add("Retourné (o/n)");
-            for (int i = 0; i < dgvClients.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées (dans la DGV client)
+            if (cbTousEmprunts.Checked)
             {
-                int TmpID = (int)dgvClients.SelectedRows[i].Cells[0].Value;
                 List<C_T_Emprunt> lTmpEmprunt = new G_T_Emprunt(sChConn).Lire("Id_Emprunt"); // Tous les emprunts
                 List<C_T_Quantite> lTmpQuantite = new G_T_Quantite(sChConn).Lire("Id_Quantite"); // Toutes les quantités
                 foreach (C_T_Emprunt TmpEmprunt in lTmpEmprunt) // On parcourt les emprunts
                 {
-                    if ((int)TmpEmprunt.Id_Client == TmpID) // Si une des tables reprend le client sélectionné...
+                    bool Retour = true; // Vrai si tous les DVD de l'emprunt ont été retournés, sinon faux
+                    foreach (C_T_Quantite TmpQuantite in lTmpQuantite) // On parcourt les quantités
                     {
-                        bool Retour = true; // Vrai si tous les DVD de l'emprunt ont été retournés, sinon faux
-                        foreach (C_T_Quantite TmpQuantite in lTmpQuantite) // On parcourt les quantités
+                        if ((int)TmpQuantite.Id_Emprunt == (int)TmpEmprunt.Id_Emprunt) // Si la quantité est reprise dans la liste en cours...
                         {
-                            if ((int)TmpQuantite.Id_Emprunt == (int)TmpEmprunt.Id_Emprunt) // Si la quantité est reprise dans la liste en cours...
-                            {
-                                if (TmpQuantite.Q_Retour == null) // Est-ce que ce DVD a été retourné ?
-                                    Retour = false; // Si ne serait-ce qu'un seul DVD de l'emprunt actuel n'est pas retourné, Retour est mis à faux
-                            }
+                            if (TmpQuantite.Q_Retour == null) // Est-ce que ce DVD a été retourné ?
+                                Retour = false; // Si ne serait-ce qu'un seul DVD de l'emprunt actuel n'est pas retourné, Retour est mis à faux
                         }
-                        dtEmprunts.Rows.Add(TmpEmprunt.Id_Emprunt, TmpEmprunt.E_Emprunt, Retour ? "oui" : "non");
+                    }
+                    dtEmprunts.Rows.Add(TmpEmprunt.Id_Emprunt, TmpEmprunt.E_Emprunt, Retour ? "oui" : "non");
+                }
+            }
+            else
+            {
+                for (int i = 0; i < dgvClients.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées (dans la DGV client)
+                {
+                    int TmpID = (int)dgvClients.SelectedRows[i].Cells[0].Value;
+                    List<C_T_Emprunt> lTmpEmprunt = new G_T_Emprunt(sChConn).Lire("Id_Emprunt"); // Tous les emprunts
+                    List<C_T_Quantite> lTmpQuantite = new G_T_Quantite(sChConn).Lire("Id_Quantite"); // Toutes les quantités
+                    foreach (C_T_Emprunt TmpEmprunt in lTmpEmprunt) // On parcourt les emprunts
+                    {
+                        if ((int)TmpEmprunt.Id_Client == TmpID) // Si une des tables reprend le client sélectionné...
+                        {
+                            bool Retour = true; // Vrai si tous les DVD de l'emprunt ont été retournés, sinon faux
+                            foreach (C_T_Quantite TmpQuantite in lTmpQuantite) // On parcourt les quantités
+                            {
+                                if ((int)TmpQuantite.Id_Emprunt == (int)TmpEmprunt.Id_Emprunt) // Si la quantité est reprise dans la liste en cours...
+                                {
+                                    if (TmpQuantite.Q_Retour == null) // Est-ce que ce DVD a été retourné ?
+                                        Retour = false; // Si ne serait-ce qu'un seul DVD de l'emprunt actuel n'est pas retourné, Retour est mis à faux
+                                }
+                            }
+                            dtEmprunts.Rows.Add(TmpEmprunt.Id_Emprunt, TmpEmprunt.E_Emprunt, Retour ? "oui" : "non");
+                        }
                     }
                 }
             }
@@ -310,25 +385,7 @@ namespace Location_DVD_NS
             dtDVD.Columns.Add("Disponible (o/n)");
             List<C_T_DVD> lTmpDVD = new G_T_DVD(sChConn).Lire("D_Nom");
             foreach (C_T_DVD TmpDVD in lTmpDVD)
-            {
-                switch (IndexFiltreDVD)
-                {
-                    case 0: // Tous
-                        dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, TmpDVD.D_Emprunt ? "non" : "oui");
-                        break;
-                    case 1: // Disponibles
-                        if (!TmpDVD.D_Emprunt)
-                            dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, TmpDVD.D_Emprunt ? "non" : "oui");
-                        break;
-                    case 2: // En prêt
-                        if (TmpDVD.D_Emprunt)
-                            dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, TmpDVD.D_Emprunt ? "non" : "oui");
-                        break;
-                    default:
-                        MessageBox.Show("Erreur : IndexFiltreDVD invalide !");
-                        break;
-                }
-            }
+                dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, TmpDVD.D_Emprunt ? "Non" : "Oui");
             bsDVD = new BindingSource();
             bsDVD.DataSource = dtDVD;
             dgvDVD.DataSource = bsDVD;
