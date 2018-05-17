@@ -33,6 +33,7 @@
             this.dgvEmprunts = new System.Windows.Forms.DataGridView();
             this.dgvActeurs = new System.Windows.Forms.DataGridView();
             this.pFiltreClients = new System.Windows.Forms.Panel();
+            this.rbtnFCEnOrdre = new System.Windows.Forms.RadioButton();
             this.lblAmende = new System.Windows.Forms.Label();
             this.tbAmende = new System.Windows.Forms.TextBox();
             this.lblFiltreClients = new System.Windows.Forms.Label();
@@ -50,12 +51,16 @@
             this.btnAjouterEmprunt = new System.Windows.Forms.Button();
             this.btnAjouterDVD = new System.Windows.Forms.Button();
             this.btnWipeDB = new System.Windows.Forms.Button();
+            this.dgvDVDEmprunt = new System.Windows.Forms.DataGridView();
+            this.btnRetourDVD = new System.Windows.Forms.Button();
+            this.cbTousEmprunts = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmprunts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvActeurs)).BeginInit();
             this.pFiltreClients.SuspendLayout();
             this.pFiltreDVD.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDVDEmprunt)).BeginInit();
             this.SuspendLayout();
             // 
             // dgvClients
@@ -104,6 +109,7 @@
             this.dgvEmprunts.Size = new System.Drawing.Size(240, 150);
             this.dgvEmprunts.TabIndex = 2;
             this.dgvEmprunts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvEmprunts_CellDoubleClick);
+            this.dgvEmprunts.SelectionChanged += new System.EventHandler(this.dgvEmprunts_SelectionChanged);
             // 
             // dgvActeurs
             // 
@@ -122,6 +128,7 @@
             // 
             // pFiltreClients
             // 
+            this.pFiltreClients.Controls.Add(this.rbtnFCEnOrdre);
             this.pFiltreClients.Controls.Add(this.lblAmende);
             this.pFiltreClients.Controls.Add(this.tbAmende);
             this.pFiltreClients.Controls.Add(this.lblFiltreClients);
@@ -131,14 +138,26 @@
             this.pFiltreClients.Controls.Add(this.rbtnFCTous);
             this.pFiltreClients.Location = new System.Drawing.Point(258, 13);
             this.pFiltreClients.Name = "pFiltreClients";
-            this.pFiltreClients.Size = new System.Drawing.Size(155, 149);
+            this.pFiltreClients.Size = new System.Drawing.Size(155, 189);
             this.pFiltreClients.TabIndex = 4;
+            // 
+            // rbtnFCEnOrdre
+            // 
+            this.rbtnFCEnOrdre.AutoSize = true;
+            this.rbtnFCEnOrdre.Location = new System.Drawing.Point(7, 43);
+            this.rbtnFCEnOrdre.Name = "rbtnFCEnOrdre";
+            this.rbtnFCEnOrdre.Size = new System.Drawing.Size(65, 17);
+            this.rbtnFCEnOrdre.TabIndex = 7;
+            this.rbtnFCEnOrdre.Tag = "0";
+            this.rbtnFCEnOrdre.Text = "En ordre";
+            this.rbtnFCEnOrdre.UseVisualStyleBackColor = true;
+            this.rbtnFCEnOrdre.CheckedChanged += new System.EventHandler(this.FiltreClients_CheckedChanged);
             // 
             // lblAmende
             // 
             this.lblAmende.AutoSize = true;
             this.lblAmende.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAmende.Location = new System.Drawing.Point(4, 109);
+            this.lblAmende.Location = new System.Drawing.Point(4, 136);
             this.lblAmende.Name = "lblAmende";
             this.lblAmende.Size = new System.Drawing.Size(105, 13);
             this.lblAmende.TabIndex = 6;
@@ -146,7 +165,7 @@
             // 
             // tbAmende
             // 
-            this.tbAmende.Location = new System.Drawing.Point(7, 126);
+            this.tbAmende.Location = new System.Drawing.Point(7, 156);
             this.tbAmende.Name = "tbAmende";
             this.tbAmende.ReadOnly = true;
             this.tbAmende.Size = new System.Drawing.Size(129, 20);
@@ -165,7 +184,7 @@
             // rbtnFCRetardCot
             // 
             this.rbtnFCRetardCot.AutoSize = true;
-            this.rbtnFCRetardCot.Location = new System.Drawing.Point(7, 89);
+            this.rbtnFCRetardCot.Location = new System.Drawing.Point(7, 112);
             this.rbtnFCRetardCot.Name = "rbtnFCRetardCot";
             this.rbtnFCRetardCot.Size = new System.Drawing.Size(143, 17);
             this.rbtnFCRetardCot.TabIndex = 3;
@@ -177,7 +196,7 @@
             // rbtnFCRetardRetour
             // 
             this.rbtnFCRetardRetour.AutoSize = true;
-            this.rbtnFCRetardRetour.Location = new System.Drawing.Point(7, 66);
+            this.rbtnFCRetardRetour.Location = new System.Drawing.Point(7, 89);
             this.rbtnFCRetardRetour.Name = "rbtnFCRetardRetour";
             this.rbtnFCRetardRetour.Size = new System.Drawing.Size(124, 17);
             this.rbtnFCRetardRetour.TabIndex = 2;
@@ -189,7 +208,7 @@
             // rbtnFCRetards
             // 
             this.rbtnFCRetards.AutoSize = true;
-            this.rbtnFCRetards.Location = new System.Drawing.Point(7, 43);
+            this.rbtnFCRetards.Location = new System.Drawing.Point(7, 66);
             this.rbtnFCRetards.Name = "rbtnFCRetards";
             this.rbtnFCRetards.Size = new System.Drawing.Size(117, 17);
             this.rbtnFCRetards.TabIndex = 1;
@@ -211,6 +230,7 @@
             this.rbtnFCTous.Text = "Tous";
             this.rbtnFCTous.UseVisualStyleBackColor = true;
             this.rbtnFCTous.CheckedChanged += new System.EventHandler(this.FiltreClients_CheckedChanged);
+            this.rbtnFCTous.EnabledChanged += new System.EventHandler(this.rbtnFCTous_EnabledChanged);
             // 
             // pFiltreDVD
             // 
@@ -316,11 +336,49 @@
             this.btnWipeDB.UseVisualStyleBackColor = true;
             this.btnWipeDB.Click += new System.EventHandler(this.btnWipeDB_Click);
             // 
+            // dgvDVDEmprunt
+            // 
+            this.dgvDVDEmprunt.AllowUserToAddRows = false;
+            this.dgvDVDEmprunt.AllowUserToDeleteRows = false;
+            this.dgvDVDEmprunt.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
+            this.dgvDVDEmprunt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDVDEmprunt.Location = new System.Drawing.Point(665, 13);
+            this.dgvDVDEmprunt.Name = "dgvDVDEmprunt";
+            this.dgvDVDEmprunt.ReadOnly = true;
+            this.dgvDVDEmprunt.RowHeadersVisible = false;
+            this.dgvDVDEmprunt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvDVDEmprunt.Size = new System.Drawing.Size(240, 150);
+            this.dgvDVDEmprunt.TabIndex = 10;
+            // 
+            // btnRetourDVD
+            // 
+            this.btnRetourDVD.Location = new System.Drawing.Point(665, 169);
+            this.btnRetourDVD.Name = "btnRetourDVD";
+            this.btnRetourDVD.Size = new System.Drawing.Size(240, 33);
+            this.btnRetourDVD.TabIndex = 11;
+            this.btnRetourDVD.Text = "Retourner les DVD sélectionnés ?";
+            this.btnRetourDVD.UseVisualStyleBackColor = true;
+            this.btnRetourDVD.Click += new System.EventHandler(this.btnRetourDVD_Click);
+            // 
+            // cbTousEmprunts
+            // 
+            this.cbTousEmprunts.AutoSize = true;
+            this.cbTousEmprunts.Location = new System.Drawing.Point(419, 169);
+            this.cbTousEmprunts.Name = "cbTousEmprunts";
+            this.cbTousEmprunts.Size = new System.Drawing.Size(147, 17);
+            this.cbTousEmprunts.TabIndex = 12;
+            this.cbTousEmprunts.Text = "Afficher tous les emprunts";
+            this.cbTousEmprunts.UseVisualStyleBackColor = true;
+            this.cbTousEmprunts.CheckedChanged += new System.EventHandler(this.cbTousEmprunts_CheckedChanged);
+            // 
             // EcranAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(671, 450);
+            this.ClientSize = new System.Drawing.Size(917, 450);
+            this.Controls.Add(this.cbTousEmprunts);
+            this.Controls.Add(this.btnRetourDVD);
+            this.Controls.Add(this.dgvDVDEmprunt);
             this.Controls.Add(this.btnWipeDB);
             this.Controls.Add(this.btnAjouterDVD);
             this.Controls.Add(this.btnAjouterEmprunt);
@@ -341,7 +399,9 @@
             this.pFiltreClients.PerformLayout();
             this.pFiltreDVD.ResumeLayout(false);
             this.pFiltreDVD.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDVDEmprunt)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -369,6 +429,10 @@
         private System.Windows.Forms.Button btnAjouterEmprunt;
         private System.Windows.Forms.Button btnAjouterDVD;
         private System.Windows.Forms.Button btnWipeDB;
+        private System.Windows.Forms.DataGridView dgvDVDEmprunt;
+        private System.Windows.Forms.Button btnRetourDVD;
+        private System.Windows.Forms.RadioButton rbtnFCEnOrdre;
+        private System.Windows.Forms.CheckBox cbTousEmprunts;
     }
 }
 

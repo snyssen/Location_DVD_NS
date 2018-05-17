@@ -69,11 +69,17 @@ namespace Location_DVD_NS
                     MessageBox.Show("Assurez-vous d'avoir rempli toutes les informations !");
                 else
                 {
-                    new G_T_Client(sChConn).Modifier(SelectedClient.Id_Client, tbNom.Text, tbPrenom.Text);
+                    new G_T_Client(sChConn).Modifier(SelectedClient.Id_Client, tbNom.Text, tbPrenom.Text, SelectedClient.C_Cotisation);
                     ChangeState();
                     RemplirDonnees();
                 }
             }
+        }
+
+        private void btnCotisation_Click(object sender, EventArgs e)
+        {
+            new G_T_Client(sChConn).Modifier(SelectedClient.Id_Client, SelectedClient.C_Nom, SelectedClient.C_Prenom, DateTime.Today);
+            MessageBox.Show("Cotisation payée ce " + DateTime.Today.ToShortDateString());
         }
     }
 }

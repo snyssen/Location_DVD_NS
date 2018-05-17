@@ -34,6 +34,7 @@
             this.lblNom = new System.Windows.Forms.Label();
             this.btnConf_Quitter = new System.Windows.Forms.Button();
             this.btnModif_Annul = new System.Windows.Forms.Button();
+            this.btnCotisation = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbPrenom
@@ -72,7 +73,7 @@
             // 
             // btnConf_Quitter
             // 
-            this.btnConf_Quitter.Location = new System.Drawing.Point(12, 129);
+            this.btnConf_Quitter.Location = new System.Drawing.Point(12, 166);
             this.btnConf_Quitter.Name = "btnConf_Quitter";
             this.btnConf_Quitter.Size = new System.Drawing.Size(210, 32);
             this.btnConf_Quitter.TabIndex = 19;
@@ -82,7 +83,7 @@
             // 
             // btnModif_Annul
             // 
-            this.btnModif_Annul.Location = new System.Drawing.Point(12, 90);
+            this.btnModif_Annul.Location = new System.Drawing.Point(12, 128);
             this.btnModif_Annul.Name = "btnModif_Annul";
             this.btnModif_Annul.Size = new System.Drawing.Size(210, 32);
             this.btnModif_Annul.TabIndex = 18;
@@ -90,11 +91,22 @@
             this.btnModif_Annul.UseVisualStyleBackColor = true;
             this.btnModif_Annul.Click += new System.EventHandler(this.btnModif_Annul_Click);
             // 
+            // btnCotisation
+            // 
+            this.btnCotisation.Location = new System.Drawing.Point(12, 90);
+            this.btnCotisation.Name = "btnCotisation";
+            this.btnCotisation.Size = new System.Drawing.Size(210, 32);
+            this.btnCotisation.TabIndex = 20;
+            this.btnCotisation.Text = "Payer la cotisation du client";
+            this.btnCotisation.UseVisualStyleBackColor = true;
+            this.btnCotisation.Click += new System.EventHandler(this.btnCotisation_Click);
+            // 
             // EcranDetailsClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(234, 173);
+            this.ClientSize = new System.Drawing.Size(234, 210);
+            this.Controls.Add(this.btnCotisation);
             this.Controls.Add(this.btnConf_Quitter);
             this.Controls.Add(this.btnModif_Annul);
             this.Controls.Add(this.tbPrenom);
@@ -115,5 +127,6 @@
         private System.Windows.Forms.Label lblNom;
         private System.Windows.Forms.Button btnConf_Quitter;
         private System.Windows.Forms.Button btnModif_Annul;
+        private System.Windows.Forms.Button btnCotisation;
     }
 }
