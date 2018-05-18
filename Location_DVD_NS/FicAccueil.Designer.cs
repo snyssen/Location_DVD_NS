@@ -54,6 +54,7 @@
             this.dgvDVDEmprunt = new System.Windows.Forms.DataGridView();
             this.btnRetourDVD = new System.Windows.Forms.Button();
             this.cbTousEmprunts = new System.Windows.Forms.CheckBox();
+            this.dlgBordereau = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmprunts)).BeginInit();
@@ -230,6 +231,7 @@
             this.rbtnFCTous.Text = "Tous";
             this.rbtnFCTous.UseVisualStyleBackColor = true;
             this.rbtnFCTous.CheckedChanged += new System.EventHandler(this.FiltreClients_CheckedChanged);
+            this.rbtnFCTous.EnabledChanged += new System.EventHandler(this.rbtnFCTous_EnabledChanged);
             // 
             // pFiltreDVD
             // 
@@ -432,6 +434,7 @@
         private System.Windows.Forms.Button btnRetourDVD;
         private System.Windows.Forms.RadioButton rbtnFCEnOrdre;
         private System.Windows.Forms.CheckBox cbTousEmprunts;
+        private System.Windows.Forms.SaveFileDialog dlgBordereau;
     }
 }
 

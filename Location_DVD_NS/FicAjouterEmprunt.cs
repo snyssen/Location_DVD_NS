@@ -20,22 +20,28 @@ namespace Location_DVD_NS
         public List<int> Liste_ID_DVD_Emprunt;
         public bool Confirmed = false;
         private string sChConn;
-        public EcranAjouterEmprunt(string _sChConn)
+        public EcranAjouterEmprunt(string _sChConn, int SelectedID)
         {
             InitializeComponent();
             this.sChConn = _sChConn;
-            RemplirListeClients();
+            RemplirListeClients(SelectedID);
             RemplirListeDVD();
         }
 
-        private void RemplirListeClients()
+        private void RemplirListeClients(int ID)
         {
             lbClientEmprunt.Items.Clear();
             List<C_T_Client> lTmpClient = new G_T_Client(sChConn).Lire("Id_Client");
+            int i = 0;
             foreach (C_T_Client TmpClient in lTmpClient)
                 // On n'ajoute que les clients qui n'ont aucun retard dans a liste d'emprunt
                 if (!new EcranAccueil(true).CalculerRetardCot((DateTime)TmpClient.C_Cotisation) || new EcranAccueil(true).CalculerAmende(TmpClient.Id_Client) == 0)
+                {
                     lbClientEmprunt.Items.Add(TmpClient.C_Nom.ToString() + " " + TmpClient.C_Prenom.ToString() + " (ID=" + TmpClient.Id_Client + ")");
+                    if (TmpClient.Id_Client == ID)
+                        lbClientEmprunt.SetSelected(i, true);
+                    i++;
+                }
         }
         private void RemplirListeDVD()
         {
