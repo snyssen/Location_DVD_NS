@@ -8,6 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+
 using Projet_LOCATION_DVD.Classes;
 using Projet_LOCATION_DVD.Acces;
 using Projet_LOCATION_DVD.Gestion;
@@ -33,6 +37,7 @@ namespace Location_DVD_NS
                 {
                     if (MessageBox.Show("La base de donnée par défaut est introuvable.\nSouhaitez-vous indiquer un autre emplacement ?", "Base de données introuvable", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     {
+                        dlgChargerDB.Filter = "Fichier de base de données Microsoft SQL|*.mdf|Tous fichiers|*.*";
                         if (dlgChargerDB.ShowDialog() == DialogResult.OK)
                         {
                             sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + dlgChargerDB.FileName + ";Integrated Security=True";
@@ -51,6 +56,7 @@ namespace Location_DVD_NS
             }
             if (System.IO.File.Exists(stab2[0]) || System.IO.File.Exists(dlgChargerDB.FileName))
             {
+                dlgBordereau.Filter = "Fichier texte|*.txt|Tous fichiers|*.*";
                 RemplirDGV();
             }
         }
@@ -197,14 +203,17 @@ namespace Location_DVD_NS
         private void rbtnFCTous_EnabledChanged(object sender, EventArgs e) // Je n'utilise l'event que sur le premier bouton vu que je change à chaque fois tout le groupe d'un coup mais que je ne veux effectuer une action qu'une seule fois
         {
             if (rbtnFCTous.Enabled) // On force le filtre "Tous"
+            {
+                rbtnFCTous.Checked = false; // On le passe d'abord à false pour être sûr de forcer son event même si il était déjà coché avant
                 rbtnFCTous.Checked = true; // Ceci déclenchera l'event "FiltreClients_CheckedChanged" qui va donc remettre le filtre "Tous" | Pas besoin de forcer les autres rbtn.Checked à false vu qu'ils sont dans le même panel et changeront donc leur état automatiquement si nécessaire
+            }
         }
 
         #endregion
         #region Boutons
         private void btnAjouterEmprunt_Click(object sender, EventArgs e)
         {
-            EcranAjouterEmprunt ajoutemprunt = new EcranAjouterEmprunt(this.sChConn);
+            EcranAjouterEmprunt ajoutemprunt = new EcranAjouterEmprunt(this.sChConn, dgvClients.SelectedRows.Count == 1 ? (int)dgvClients.SelectedRows[0].Cells[0].Value : -1);
             ajoutemprunt.ShowDialog();
             if (ajoutemprunt.Confirmed)
             {
@@ -216,6 +225,8 @@ namespace Location_DVD_NS
                     C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID(ID);
                     new G_T_DVD(sChConn).Modifier(ID, TmpDVD.D_Nom, true, TmpDVD.D_Genre, TmpDVD.D_Emprunt_Max, TmpDVD.D_Amende_p_J, TmpDVD.D_Synopsis);
                 }
+                if (MessageBox.Show("Souhaitez-vous générer un bordereau d'emprunt ?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    GenererBordereauPlainText(ajoutemprunt.IDClientEmprunt, ajoutemprunt.Liste_ID_DVD_Emprunt, nID);
                 RemplirDGV();
             }
         }
@@ -322,6 +333,12 @@ namespace Location_DVD_NS
             bsClients = new BindingSource();
             bsClients.DataSource = dtClients;
             dgvClients.DataSource = bsClients;
+
+            //foreach (DataGridViewRow row in dgvClients.Rows)
+            //{
+            //    if (row.Cells[4].Value.ToString() != "Non")
+            //        row.DefaultCellStyle.BackColor = Color.Red;
+            //}
         }
 
         private void RemplirDGVEmprunt()
@@ -345,7 +362,7 @@ namespace Location_DVD_NS
                                 Retour = false; // Si ne serait-ce qu'un seul DVD de l'emprunt actuel n'est pas retourné, Retour est mis à faux
                         }
                     }
-                    dtEmprunts.Rows.Add(TmpEmprunt.Id_Emprunt, TmpEmprunt.E_Emprunt, Retour ? "oui" : "non");
+                    dtEmprunts.Rows.Add(TmpEmprunt.Id_Emprunt, TmpEmprunt.E_Emprunt, Retour ? "Oui" : "Non");
                 }
             }
             else
@@ -368,7 +385,7 @@ namespace Location_DVD_NS
                                         Retour = false; // Si ne serait-ce qu'un seul DVD de l'emprunt actuel n'est pas retourné, Retour est mis à faux
                                 }
                             }
-                            dtEmprunts.Rows.Add(TmpEmprunt.Id_Emprunt, TmpEmprunt.E_Emprunt, Retour ? "oui" : "non");
+                            dtEmprunts.Rows.Add(TmpEmprunt.Id_Emprunt, TmpEmprunt.E_Emprunt, Retour ? "Oui" : "Non");
                         }
                     }
                 }
@@ -376,6 +393,12 @@ namespace Location_DVD_NS
             bsEmprunts = new BindingSource();
             bsEmprunts.DataSource = dtEmprunts;
             dgvEmprunts.DataSource = bsEmprunts;
+
+            //foreach (DataGridViewRow row in dgvEmprunts.Rows)
+            //{
+            //    if (row.Cells[2].Value.ToString() == "Non")
+            //        row.DefaultCellStyle.BackColor = Color.Red;
+            //}
         }
 
         private void RemplirDGVDVD()
@@ -384,12 +407,35 @@ namespace Location_DVD_NS
             dtDVD.Columns.Add(new DataColumn("ID", System.Type.GetType("System.Int32")));
             dtDVD.Columns.Add("Nom");
             dtDVD.Columns.Add("Disponible (o/n)");
+            dtDVD.Columns.Add("Retard (o/n)");
             List<C_T_DVD> lTmpDVD = new G_T_DVD(sChConn).Lire("D_Nom");
+            List<C_T_Quantite> lTmpQuantite = new G_T_Quantite(sChConn).Lire("Id_Quantite");
             foreach (C_T_DVD TmpDVD in lTmpDVD)
-                dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, TmpDVD.D_Emprunt ? "Non" : "Oui");
+            {
+                if (TmpDVD.D_Emprunt)
+                {
+                    foreach (C_T_Quantite TmpQuantite in lTmpQuantite)
+                    {
+                        if (TmpQuantite.Id_DVD == TmpDVD.Id_DVD && TmpQuantite.Q_Retour == null)
+                        {
+                            C_T_Emprunt SelectedEmprunt = new G_T_Emprunt(sChConn).Lire_ID((int)TmpQuantite.Id_Emprunt);
+                            DateTime DateEmprunt = (DateTime)SelectedEmprunt.E_Emprunt;
+                            dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, "Non", TmpQuantite.Q_Retour > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "oui" : "non");
+                        }
+                    }
+                }
+                else
+                    dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, "Oui", "Non");
+            }
             bsDVD = new BindingSource();
             bsDVD.DataSource = dtDVD;
             dgvDVD.DataSource = bsDVD;
+
+            //foreach (DataGridViewRow row in dgvDVD.Rows)
+            //{
+            //    if (row.Cells[3].Value.ToString() == "Oui")
+            //        row.DefaultCellStyle.BackColor = Color.Red;
+            //}
         }
 
         private void RemplirDGVActeurs()
@@ -447,6 +493,12 @@ namespace Location_DVD_NS
             bsDVDEmprunt = new BindingSource();
             bsDVDEmprunt.DataSource = dtDVDEmprunt;
             dgvDVDEmprunt.DataSource = bsDVDEmprunt;
+
+            //foreach (DataGridViewRow row in dgvDVDEmprunt.Rows)
+            //{
+            //    if (row.Cells[4].Value.ToString() == "Oui")
+            //        row.DefaultCellStyle.BackColor = Color.Red;
+            //}
         }
 
         #endregion
@@ -490,7 +542,7 @@ namespace Location_DVD_NS
             return amende;
         }
 
-        public bool CalculerRetardCot(DateTime DateCot) // retourne vrai 
+        public bool CalculerRetardCot(DateTime DateCot) // retourne vrai si le client est en retard de cotisation (attend la date du dernier paiement de la cotisation en argument)
         {
             //if (DateTime.Today.Date > DateCot.Date.AddMonths(1))
             // DEBUG
@@ -534,6 +586,48 @@ namespace Location_DVD_NS
 
                 RemplirDGV();
                 MessageBox.Show("La base de données est maintenant vide.", "Opération effectuée", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void GenererBordereau()
+        {
+
+        }
+
+        private void GenererBordereauPlainText(int ID_Client, List<int> lID_DVD, int ID_Emprunt)
+        {
+            if (dlgBordereau.ShowDialog() == DialogResult.OK)
+            {
+                StreamWriter sw = new StreamWriter(dlgBordereau.FileName);
+                C_T_Client TmpClient = new G_T_Client(sChConn).Lire_ID(ID_Client);
+                C_T_Emprunt TmpEmprunt = new G_T_Emprunt(sChConn).Lire_ID(ID_Emprunt);
+                sw.WriteLine("Client n°" + TmpClient.Id_Client + "\t\t\t\t\t\t\tEmprunt n°" + TmpEmprunt.Id_Emprunt);
+                DateTime DateEmprunt = (DateTime)TmpEmprunt.E_Emprunt;
+                sw.WriteLine(TmpClient.C_Nom.ToUpper() + " " + TmpClient.C_Prenom + "\t\t\t\t\t\tDate : " + DateEmprunt.ToShortDateString());
+
+                #region Tableau
+                sw.WriteLine("");
+                sw.WriteLine("_____________________________________________________________");
+                sw.WriteLine("| n°  |            \t\t\t\t | Date  \t | Amende   \t|");
+                sw.WriteLine("| DVD | Nom du film\t\t\t\t | limite\t | par jour \t|");
+                sw.WriteLine("|     |            \t\t\t\t | retour\t | de retard\t|");
+                sw.WriteLine("|-----|--------------------------|-----------|--------------|");
+                foreach (int ID_DVD in lID_DVD)
+                {
+                    C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID(ID_DVD);
+                    if (TmpDVD.Id_DVD < 10)
+                        sw.WriteLine("| " + TmpDVD.Id_DVD + "   | " + TmpDVD.D_Nom + "\t\t\t | " + DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max).ToShortDateString() + " | " + TmpDVD.D_Amende_p_J + "€\t\t\t |");
+                    else if (TmpDVD.Id_DVD < 100)
+                        sw.WriteLine("| " + TmpDVD.Id_DVD + "  | " + TmpDVD.D_Nom + "\t\t\t | " + DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max).ToShortDateString() + " | " + TmpDVD.D_Amende_p_J + "€\t\t\t |");
+                    else
+                        sw.WriteLine("| " + TmpDVD.Id_DVD + " | " + TmpDVD.D_Nom + "\t\t\t | " + DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max).ToShortDateString() + " | " + TmpDVD.D_Amende_p_J + "€\t\t\t | ");
+
+
+                }
+                sw.WriteLine("|_____|__________________________|___________|______________|");
+                #endregion
+
+                sw.Close();
             }
         }
         #endregion
