@@ -49,6 +49,7 @@ namespace Location_DVD_NS
             List<C_T_DVD> lTmpDVD = new G_T_DVD(sChConn).Lire("Id_DVD");
             foreach (C_T_DVD TmpDVD in lTmpDVD)
             {
+                // On n'ajoute que les DVD qui ne sont pas en prêt
                 if (!TmpDVD.D_Emprunt)
                     lbDVDEmprunt.Items.Add(TmpDVD.D_Nom.ToString() + " (ID=" + TmpDVD.Id_DVD + ")");
             }

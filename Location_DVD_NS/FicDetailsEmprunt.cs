@@ -82,7 +82,7 @@ namespace Location_DVD_NS
                         new G_T_DVD(sChConn).Modifier(TmpDVD.Id_DVD, TmpDVD.D_Nom, false, TmpDVD.D_Genre, TmpDVD.D_Emprunt_Max, TmpDVD.D_Amende_p_J, TmpDVD.D_Synopsis); // On change le bool d'emprunt du DVD à false => le DVD est à nouveau disponible
                         foreach (C_T_Quantite TmpQuantite in lQuantite)
                         {
-                            if (TmpQuantite.Id_DVD == TmpDVD.Id_DVD && TmpQuantite.Id_Emprunt == SelectedEmprunt.Id_Emprunt) // Important de confirmer les 2 conditions pour ne pas modifier la date de rentrée d'un autre emprunt
+                            if (TmpQuantite.Id_DVD == TmpDVD.Id_DVD && TmpQuantite.Q_Retour == null) // Important de confirmer les 2 conditions pour ne pas modifier la date de rentrée d'un autre emprunt
                             {
                                 new G_T_Quantite(sChConn).Modifier(TmpQuantite.Id_Quantite, TmpQuantite.Id_Emprunt, TmpQuantite.Id_DVD, DateTime.Today); // On met la date du jour comme date de rentrée
                             }

@@ -218,7 +218,6 @@ namespace Location_DVD_NS
             if (ajoutemprunt.Confirmed)
             {
                 int nID = new G_T_Emprunt(sChConn).Ajouter(ajoutemprunt.IDClientEmprunt, DateTime.Today);
-                dtEmprunts.Rows.Add(nID, DateTime.Today, "non");
                 foreach (int ID in ajoutemprunt.Liste_ID_DVD_Emprunt)
                 {
                     new G_T_Quantite(sChConn).Ajouter(nID, ID, null);
@@ -280,7 +279,7 @@ namespace Location_DVD_NS
                         List<C_T_Quantite> lTmpQuantite = new G_T_Quantite(sChConn).Lire("Id_Quantite");
                         foreach (C_T_Quantite TmpQuantite in lTmpQuantite)
                         {
-                            if (TmpQuantite.Id_DVD == TmpDVD.Id_DVD && TmpQuantite.Id_Emprunt == (int)dgvDVDEmprunt.SelectedRows[i].Cells[0].Value) // Important de confirmer les 2 conditions pour ne pas modifier la date de rentrée d'un autre emprunt
+                            if (TmpQuantite.Id_DVD == TmpDVD.Id_DVD && TmpQuantite.Q_Retour == null) // Important de confirmer les 2 conditions pour ne pas modifier la date de rentrée d'un autre emprunt 
                             {
                                 new G_T_Quantite(sChConn).Modifier(TmpQuantite.Id_Quantite, TmpQuantite.Id_Emprunt, TmpQuantite.Id_DVD, DateTime.Today); // On met la date du jour comme date de rentrée
                             }
@@ -420,12 +419,12 @@ namespace Location_DVD_NS
                         {
                             C_T_Emprunt SelectedEmprunt = new G_T_Emprunt(sChConn).Lire_ID((int)TmpQuantite.Id_Emprunt);
                             DateTime DateEmprunt = (DateTime)SelectedEmprunt.E_Emprunt;
-                            dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, "Non", TmpQuantite.Q_Retour > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "oui" : "non");
+                            dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, "Non", TmpQuantite.Q_Retour > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "Oui" : "Non");
                         }
                     }
                 }
                 else
-                    dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, "Oui", "Non");
+                    dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, "Oui", "N/A");
             }
             bsDVD = new BindingSource();
             bsDVD.DataSource = dtDVD;
@@ -486,7 +485,7 @@ namespace Location_DVD_NS
                     {
                         C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID((int)TmpQuantite.Id_DVD);
                         DateTime DateEmprunt = (DateTime)SelectedEmprunt.E_Emprunt;
-                        dtDVDEmprunt.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max).ToString(), TmpQuantite.Q_Retour == null ? "Non rentré" : TmpQuantite.Q_Retour.ToString(), TmpQuantite.Q_Retour == null ? (DateTime.Today > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "oui" : "non") : (TmpQuantite.Q_Retour > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "oui" : "non"));
+                        dtDVDEmprunt.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max).ToString(), TmpQuantite.Q_Retour == null ? "Non rentré" : TmpQuantite.Q_Retour.ToString(), TmpQuantite.Q_Retour == null ? (DateTime.Today > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "Oui" : "Non") : (TmpQuantite.Q_Retour > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "Oui" : "Non"));
                     }
                 }
             }
