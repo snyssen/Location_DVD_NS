@@ -34,14 +34,16 @@ namespace Location_DVD_NS
             List<C_T_Client> lTmpClient = new G_T_Client(sChConn).Lire("Id_Client");
             int i = 0;
             foreach (C_T_Client TmpClient in lTmpClient)
+            {
                 // On n'ajoute que les clients qui n'ont aucun retard dans a liste d'emprunt
-                if (!new EcranAccueil(true).CalculerRetardCot((DateTime)TmpClient.C_Cotisation) || new EcranAccueil(true).CalculerAmende(TmpClient.Id_Client) == 0)
+                if (!new EcranAccueil(sChConn).CalculerRetardCot((DateTime)TmpClient.C_Cotisation) && new EcranAccueil(sChConn).CalculerAmende(TmpClient.Id_Client) == 0)
                 {
                     lbClientEmprunt.Items.Add(TmpClient.C_Nom.ToString() + " " + TmpClient.C_Prenom.ToString() + " (ID=" + TmpClient.Id_Client + ")");
                     if (TmpClient.Id_Client == ID)
                         lbClientEmprunt.SetSelected(i, true);
                     i++;
                 }
+            }
         }
         private void RemplirListeDVD()
         {

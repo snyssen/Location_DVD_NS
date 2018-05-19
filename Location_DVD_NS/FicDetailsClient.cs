@@ -39,6 +39,7 @@ namespace Location_DVD_NS
         {
             Modifying = !Modifying;
             tbNom.Enabled = tbPrenom.Enabled = Modifying;
+            btnCotisation.Enabled = !Modifying;
             if (Modifying)
             {
                 btnModif_Annul.Text = "Annuler";

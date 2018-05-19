@@ -60,7 +60,7 @@ namespace Location_DVD_NS
                 RemplirDGV();
             }
         }
-        public EcranAccueil(bool Acces) { } // Constructeur "poubelle" pour accès aux méthodes du form
+        public EcranAccueil(string sChConn_) { this.sChConn = sChConn_; } // Constructeur "poubelle" pour accès aux méthodes du form
         #endregion
 
         #region Event handlers
@@ -122,6 +122,18 @@ namespace Location_DVD_NS
                 EcranDetailsDVD detailsDVD = new EcranDetailsDVD((int)dgvDVD.SelectedRows[0].Cells[0].Value, sChConn);
                 detailsDVD.ShowDialog();
                 RemplirDGVDVD();
+                RemplirDGVDVDEmprunt();
+            }
+        }
+
+        private void dgvDVDEmprunt_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvDVDEmprunt.SelectedRows.Count == 1)
+            {
+                EcranDetailsDVD detailsDVD = new EcranDetailsDVD((int)dgvDVDEmprunt.SelectedRows[0].Cells[0].Value, sChConn);
+                detailsDVD.ShowDialog();
+                RemplirDGVDVD();
+                RemplirDGVDVDEmprunt();
             }
         }
 
@@ -179,16 +191,16 @@ namespace Location_DVD_NS
                         bsClients.Filter = null;
                         break;
                     case 1: // En ordre
-                        bsClients.Filter = "'Retard(s)' = 'Non'";
+                        bsClients.Filter = "[Retard(s)] = 'Non'";
                         break;
                     case 2: // Retard (tous)
-                        bsClients.Filter = "'Retard(s)' = 'Retour' OR 'Retard(s)' = 'Cotisation' OR 'Retard(s)' = 'Cotisation et Retour'";
+                        bsClients.Filter = "[Retard(s)] = 'Retour' OR [Retard(s)] = 'Cotisation' OR [Retard(s)] = 'Cotisation et Retour'";
                         break;
                     case 3: // Retard (retour)
-                        bsClients.Filter = "'Retard(s)' = 'Retour' OR 'Retard(s)' = 'Cotisation et Retour'";
+                        bsClients.Filter = "[Retard(s)] = 'Retour' OR [Retard(s)] = 'Cotisation et Retour'";
                         break;
                     case 4: // Retard (cotisation)
-                        bsClients.Filter = "'Retard(s)' = 'Cotisation' OR 'Retard(s)' = 'Cotisation et Retour'";
+                        bsClients.Filter = "[Retard(s)] = 'Cotisation' OR [Retard(s)] = 'Cotisation et Retour'";
                         break;
                 }
             }
@@ -292,6 +304,22 @@ namespace Location_DVD_NS
                 RemplirDGVDVD();
                 RemplirDGVEmprunt();
                 RemplirDGVDVDEmprunt();
+            }
+        }
+
+        private void btnCotisation_Click(object sender, EventArgs e)
+        {
+            int i;
+            string result = "Cotisation payée ce " + DateTime.Today.ToShortDateString() + " pour :\n";
+            for (i = 0;  i < dgvClients.SelectedRows.Count; i++)
+            {
+                new G_T_Client(sChConn).Modifier((int)dgvClients.SelectedRows[i].Cells[0].Value, dgvClients.SelectedRows[i].Cells[1].Value.ToString(), dgvClients.SelectedRows[i].Cells[2].Value.ToString(), DateTime.Today);
+                result += dgvClients.SelectedRows[i].Cells[1].Value.ToString() + " " + dgvClients.SelectedRows[i].Cells[2].Value.ToString() + "\n";
+            }
+            if (i > 0)
+            {
+                MessageBox.Show(result);
+                RemplirDGVClient();
             }
         }
         #endregion
@@ -419,7 +447,7 @@ namespace Location_DVD_NS
                         {
                             C_T_Emprunt SelectedEmprunt = new G_T_Emprunt(sChConn).Lire_ID((int)TmpQuantite.Id_Emprunt);
                             DateTime DateEmprunt = (DateTime)SelectedEmprunt.E_Emprunt;
-                            dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, "Non", TmpQuantite.Q_Retour > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "Oui" : "Non");
+                            dtDVD.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, "Non", TmpQuantite.Q_Retour == null ? (DateTime.Today > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "Oui" : "Non") : (TmpQuantite.Q_Retour > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "Oui" : "Non"));
                         }
                     }
                 }
@@ -499,7 +527,6 @@ namespace Location_DVD_NS
             //        row.DefaultCellStyle.BackColor = Color.Red;
             //}
         }
-
         #endregion
 
         #region Méthodes
@@ -545,7 +572,7 @@ namespace Location_DVD_NS
         {
             //if (DateTime.Today.Date > DateCot.Date.AddMonths(1))
             // DEBUG
-            if (DateTime.Today.Date > DateCot.Date.AddDays(1))
+            if (DateTime.Today.Date > DateCot.Date.AddMonths(1))
                 return true;
             else
                 return false;
@@ -588,42 +615,114 @@ namespace Location_DVD_NS
             }
         }
 
-        private void GenererBordereau()
+        private void GenererBordereau() // Génère le bordereau dans un fichier PDF (vide pour le moment)
         {
 
         }
 
-        private void GenererBordereauPlainText(int ID_Client, List<int> lID_DVD, int ID_Emprunt)
+        private void GenererBordereauPlainText(int ID_Client, List<int> lID_DVD, int ID_Emprunt) // Génère le bordereau en ASCII dans un fichier texte
         {
             if (dlgBordereau.ShowDialog() == DialogResult.OK)
             {
+                string TmpString, TmpStringR;
                 StreamWriter sw = new StreamWriter(dlgBordereau.FileName);
                 C_T_Client TmpClient = new G_T_Client(sChConn).Lire_ID(ID_Client);
                 C_T_Emprunt TmpEmprunt = new G_T_Emprunt(sChConn).Lire_ID(ID_Emprunt);
-                sw.WriteLine("Client n°" + TmpClient.Id_Client + "\t\t\t\t\t\t\tEmprunt n°" + TmpEmprunt.Id_Emprunt);
+                TmpString = "Client n° " + TmpClient.Id_Client;
+                TmpString = TmpString.PadRight(43); // 43 = 86/2
+                TmpStringR = "Emprunt n° " + TmpEmprunt.Id_Emprunt;
+                TmpStringR = TmpStringR.PadLeft(43);
+                TmpString += TmpStringR;
+                sw.WriteLine(TmpString);
                 DateTime DateEmprunt = (DateTime)TmpEmprunt.E_Emprunt;
-                sw.WriteLine(TmpClient.C_Nom.ToUpper() + " " + TmpClient.C_Prenom + "\t\t\t\t\t\tDate : " + DateEmprunt.ToShortDateString());
-
-                #region Tableau
+                TmpString = TmpClient.C_Nom.ToUpper() + " " + TmpClient.C_Prenom;
+                TmpString = TmpString.PadRight(43);
+                TmpStringR = "Date : " + DateEmprunt.ToShortDateString();
+                TmpStringR = TmpStringR.PadLeft(43);
+                TmpString += TmpStringR;
+                sw.WriteLine(TmpString);
                 sw.WriteLine("");
-                sw.WriteLine("_____________________________________________________________");
-                sw.WriteLine("| n°  |            \t\t\t\t | Date  \t | Amende   \t|");
-                sw.WriteLine("| DVD | Nom du film\t\t\t\t | limite\t | par jour \t|");
-                sw.WriteLine("|     |            \t\t\t\t | retour\t | de retard\t|");
-                sw.WriteLine("|-----|--------------------------|-----------|--------------|");
+                #region Tableau
+                #region Entête
+                sw.WriteLine("______________________________________________________________________________________"); // 86 char = largeur tableau
+                #region Ligne 1
+                TmpString = "| n°";
+                TmpString = TmpString.PadRight(7);
+                TmpString += "|";
+                TmpString = TmpString.PadRight(60);
+                TmpString += "| Date";
+                TmpString = TmpString.PadRight(73);
+                TmpString += "| Amende";
+                TmpString = TmpString.PadRight(85);
+                TmpString += "|";
+                sw.WriteLine(TmpString);
+                #endregion
+                #region Ligne 2
+                TmpString = "| DVD";
+                TmpString = TmpString.PadRight(7);
+                TmpString += "| Nom du film";
+                TmpString = TmpString.PadRight(60);
+                TmpString += "| limite";
+                TmpString = TmpString.PadRight(73);
+                TmpString += "| par jour";
+                TmpString = TmpString.PadRight(85);
+                TmpString += "|";
+                sw.WriteLine(TmpString);
+                #endregion
+                #region Ligne 3
+                TmpString = "|";
+                TmpString = TmpString.PadRight(7);
+                TmpString += "|";
+                TmpString = TmpString.PadRight(60);
+                TmpString += "| retour";
+                TmpString = TmpString.PadRight(73);
+                TmpString += "| de retard";
+                TmpString = TmpString.PadRight(85);
+                TmpString += "|";
+                sw.WriteLine(TmpString);
+                #endregion
+                TmpString = "|";
+                TmpString = TmpString.PadRight(7, '-');
+                TmpString += "+";
+                TmpString = TmpString.PadRight(60, '-');
+                TmpString += "+";
+                TmpString = TmpString.PadRight(73, '-');
+                TmpString += "+";
+                TmpString = TmpString.PadRight(85, '-');
+                TmpString += "|";
+                sw.WriteLine(TmpString);
+                #endregion
                 foreach (int ID_DVD in lID_DVD)
                 {
                     C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID(ID_DVD);
-                    if (TmpDVD.Id_DVD < 10)
-                        sw.WriteLine("| " + TmpDVD.Id_DVD + "   | " + TmpDVD.D_Nom + "\t\t\t | " + DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max).ToShortDateString() + " | " + TmpDVD.D_Amende_p_J + "€\t\t\t |");
-                    else if (TmpDVD.Id_DVD < 100)
-                        sw.WriteLine("| " + TmpDVD.Id_DVD + "  | " + TmpDVD.D_Nom + "\t\t\t | " + DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max).ToShortDateString() + " | " + TmpDVD.D_Amende_p_J + "€\t\t\t |");
-                    else
-                        sw.WriteLine("| " + TmpDVD.Id_DVD + " | " + TmpDVD.D_Nom + "\t\t\t | " + DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max).ToShortDateString() + " | " + TmpDVD.D_Amende_p_J + "€\t\t\t | ");
-
-
+                    TmpString = "| ";
+                    TmpString += TmpDVD.Id_DVD.ToString();
+                    TmpString = TmpString.PadRight(7);
+                    TmpString += "| ";
+                    TmpString += TmpDVD.D_Nom.ToString();
+                    TmpString = TmpString.PadRight(60);
+                    TmpString += "| ";
+                    TmpString += DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max).ToShortDateString();
+                    TmpString = TmpString.PadRight(73);
+                    TmpString += "| ";
+                    TmpString += TmpDVD.D_Amende_p_J.ToString();
+                    TmpString += "€";
+                    TmpString = TmpString.PadRight(85);
+                    TmpString += "|";
+                    sw.WriteLine(TmpString);
                 }
-                sw.WriteLine("|_____|__________________________|___________|______________|");
+                #region Dernière ligne
+                TmpString = "|";
+                TmpString = TmpString.PadRight(7, '_');
+                TmpString += "|";
+                TmpString = TmpString.PadRight(60, '_');
+                TmpString += "|";
+                TmpString = TmpString.PadRight(73, '_');
+                TmpString += "|";
+                TmpString = TmpString.PadRight(85, '_');
+                TmpString += "|";
+                sw.WriteLine(TmpString);
+                #endregion
                 #endregion
 
                 sw.Close();

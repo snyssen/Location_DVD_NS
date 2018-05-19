@@ -108,11 +108,10 @@
             // 
             // lbActeurs
             // 
-            this.lbActeurs.Enabled = false;
             this.lbActeurs.FormattingEnabled = true;
             this.lbActeurs.Location = new System.Drawing.Point(11, 213);
             this.lbActeurs.Name = "lbActeurs";
-            this.lbActeurs.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.lbActeurs.SelectionMode = System.Windows.Forms.SelectionMode.None;
             this.lbActeurs.Size = new System.Drawing.Size(210, 108);
             this.lbActeurs.TabIndex = 6;
             // 
@@ -144,10 +143,10 @@
             // 
             // lbClients_precedents
             // 
-            this.lbClients_precedents.Enabled = false;
             this.lbClients_precedents.FormattingEnabled = true;
             this.lbClients_precedents.Location = new System.Drawing.Point(12, 382);
             this.lbClients_precedents.Name = "lbClients_precedents";
+            this.lbClients_precedents.SelectionMode = System.Windows.Forms.SelectionMode.None;
             this.lbClients_precedents.Size = new System.Drawing.Size(210, 108);
             this.lbClients_precedents.TabIndex = 10;
             // 

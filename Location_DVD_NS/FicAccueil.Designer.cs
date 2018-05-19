@@ -55,6 +55,7 @@
             this.btnRetourDVD = new System.Windows.Forms.Button();
             this.cbTousEmprunts = new System.Windows.Forms.CheckBox();
             this.dlgBordereau = new System.Windows.Forms.SaveFileDialog();
+            this.btnCotisation = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmprunts)).BeginInit();
@@ -129,6 +130,7 @@
             // 
             // pFiltreClients
             // 
+            this.pFiltreClients.Controls.Add(this.btnCotisation);
             this.pFiltreClients.Controls.Add(this.rbtnFCEnOrdre);
             this.pFiltreClients.Controls.Add(this.lblAmende);
             this.pFiltreClients.Controls.Add(this.tbAmende);
@@ -139,7 +141,7 @@
             this.pFiltreClients.Controls.Add(this.rbtnFCTous);
             this.pFiltreClients.Location = new System.Drawing.Point(258, 13);
             this.pFiltreClients.Name = "pFiltreClients";
-            this.pFiltreClients.Size = new System.Drawing.Size(155, 189);
+            this.pFiltreClients.Size = new System.Drawing.Size(155, 269);
             this.pFiltreClients.TabIndex = 4;
             // 
             // rbtnFCEnOrdre
@@ -149,7 +151,7 @@
             this.rbtnFCEnOrdre.Name = "rbtnFCEnOrdre";
             this.rbtnFCEnOrdre.Size = new System.Drawing.Size(65, 17);
             this.rbtnFCEnOrdre.TabIndex = 7;
-            this.rbtnFCEnOrdre.Tag = "0";
+            this.rbtnFCEnOrdre.Tag = "1";
             this.rbtnFCEnOrdre.Text = "En ordre";
             this.rbtnFCEnOrdre.UseVisualStyleBackColor = true;
             this.rbtnFCEnOrdre.CheckedChanged += new System.EventHandler(this.FiltreClients_CheckedChanged);
@@ -169,7 +171,7 @@
             this.tbAmende.Location = new System.Drawing.Point(7, 156);
             this.tbAmende.Name = "tbAmende";
             this.tbAmende.ReadOnly = true;
-            this.tbAmende.Size = new System.Drawing.Size(129, 20);
+            this.tbAmende.Size = new System.Drawing.Size(143, 20);
             this.tbAmende.TabIndex = 5;
             // 
             // lblFiltreClients
@@ -189,7 +191,7 @@
             this.rbtnFCRetardCot.Name = "rbtnFCRetardCot";
             this.rbtnFCRetardCot.Size = new System.Drawing.Size(143, 17);
             this.rbtnFCRetardCot.TabIndex = 3;
-            this.rbtnFCRetardCot.Tag = "3";
+            this.rbtnFCRetardCot.Tag = "4";
             this.rbtnFCRetardCot.Text = "Retardataires (Cotisation)";
             this.rbtnFCRetardCot.UseVisualStyleBackColor = true;
             this.rbtnFCRetardCot.CheckedChanged += new System.EventHandler(this.FiltreClients_CheckedChanged);
@@ -201,7 +203,7 @@
             this.rbtnFCRetardRetour.Name = "rbtnFCRetardRetour";
             this.rbtnFCRetardRetour.Size = new System.Drawing.Size(124, 17);
             this.rbtnFCRetardRetour.TabIndex = 2;
-            this.rbtnFCRetardRetour.Tag = "2";
+            this.rbtnFCRetardRetour.Tag = "3";
             this.rbtnFCRetardRetour.Text = "Retardataires (retour)";
             this.rbtnFCRetardRetour.UseVisualStyleBackColor = true;
             this.rbtnFCRetardRetour.CheckedChanged += new System.EventHandler(this.FiltreClients_CheckedChanged);
@@ -213,7 +215,7 @@
             this.rbtnFCRetards.Name = "rbtnFCRetards";
             this.rbtnFCRetards.Size = new System.Drawing.Size(117, 17);
             this.rbtnFCRetards.TabIndex = 1;
-            this.rbtnFCRetards.Tag = "1";
+            this.rbtnFCRetards.Tag = "2";
             this.rbtnFCRetards.Text = "Retardataires (tous)";
             this.rbtnFCRetards.UseVisualStyleBackColor = true;
             this.rbtnFCRetards.CheckedChanged += new System.EventHandler(this.FiltreClients_CheckedChanged);
@@ -350,6 +352,7 @@
             this.dgvDVDEmprunt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvDVDEmprunt.Size = new System.Drawing.Size(240, 150);
             this.dgvDVDEmprunt.TabIndex = 10;
+            this.dgvDVDEmprunt.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDVDEmprunt_CellDoubleClick);
             // 
             // btnRetourDVD
             // 
@@ -371,6 +374,16 @@
             this.cbTousEmprunts.Text = "Afficher tous les emprunts";
             this.cbTousEmprunts.UseVisualStyleBackColor = true;
             this.cbTousEmprunts.CheckedChanged += new System.EventHandler(this.cbTousEmprunts_CheckedChanged);
+            // 
+            // btnCotisation
+            // 
+            this.btnCotisation.Location = new System.Drawing.Point(3, 182);
+            this.btnCotisation.Name = "btnCotisation";
+            this.btnCotisation.Size = new System.Drawing.Size(149, 40);
+            this.btnCotisation.TabIndex = 13;
+            this.btnCotisation.Text = "Payer la cotisation du/des client(s) sélectionné(s) ?";
+            this.btnCotisation.UseVisualStyleBackColor = true;
+            this.btnCotisation.Click += new System.EventHandler(this.btnCotisation_Click);
             // 
             // EcranAccueil
             // 
@@ -435,6 +448,7 @@
         private System.Windows.Forms.RadioButton rbtnFCEnOrdre;
         private System.Windows.Forms.CheckBox cbTousEmprunts;
         private System.Windows.Forms.SaveFileDialog dlgBordereau;
+        private System.Windows.Forms.Button btnCotisation;
     }
 }
 

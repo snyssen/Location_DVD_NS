@@ -86,18 +86,20 @@ namespace Location_DVD_NS
         private void ChangeState()
         {
             Modifying = !Modifying; // Inversion de Modifying
-            tbNomFilm.Enabled = tbGenre.Enabled = btnModiferSynopsis.Enabled = nudEmpruntMax.Enabled = nudAmende_p_j.Enabled = lbActeurs.Enabled = Modifying; // Active/Désactive tous les éléments pouvant être modifiés
+            tbNomFilm.Enabled = tbGenre.Enabled = btnModiferSynopsis.Enabled = nudEmpruntMax.Enabled = nudAmende_p_j.Enabled = Modifying; // Active/Désactive tous les éléments pouvant être modifiés
             if (Modifying)
             {
                 btnModif_Annul.Text = "Annuler";
                 btnConf_Quitter.Text = "Confirmer";
                 lblActeurs.Text = "Acteurs principaux (sélection)";
+                lbActeurs.SelectionMode = SelectionMode.MultiSimple;
             }
             else
             {
                 btnModif_Annul.Text = "Modifier informations";
                 btnConf_Quitter.Text = "Quitter";
                 lblActeurs.Text = "Acteurs principaux";
+                lbActeurs.SelectionMode = SelectionMode.None;
             }
         }
 
