@@ -45,8 +45,20 @@ namespace Location_DVD_NS
             ajoutacteur.ShowDialog();
             if (ajoutacteur.confirmed)
             {
-                new G_T_Acteur(sChConn).Ajouter(ajoutacteur.NomActeur, ajoutacteur.PrenomActeur, ajoutacteur.BioActeur);
-                RemplirListeActeurs();
+                bool Doublon = false;
+                List<C_T_Acteur> lTmpActeur = new G_T_Acteur(sChConn).Lire("Id_Acteur");
+                foreach (C_T_Acteur TmpActeur in lTmpActeur)
+                {
+                    if (TmpActeur.A_Nom == ajoutacteur.NomActeur && TmpActeur.A_Prenom == ajoutacteur.PrenomActeur)
+                        Doublon = true;
+                }
+                if (!Doublon)
+                {
+                    new G_T_Acteur(sChConn).Ajouter(ajoutacteur.NomActeur, ajoutacteur.PrenomActeur, ajoutacteur.BioActeur);
+                    RemplirListeActeurs();
+                }
+                else
+                    MessageBox.Show("Un acteur du même nom et prénom est déjà présent dans la base de données !");
             }
         }
 

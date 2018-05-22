@@ -253,13 +253,25 @@ namespace Location_DVD_NS
             ajoutDVD.ShowDialog();
             if (ajoutDVD.Confirmed)
             {
-                int nID = new G_T_DVD(sChConn).Ajouter(ajoutDVD.NomDVD, false, ajoutDVD.GenreDVD, ajoutDVD.EmpruntMaxDVD, (double)ajoutDVD.Amende_p_jourDVD, ajoutDVD.SynopsisDVD);
-                dtDVD.Rows.Add(nID, ajoutDVD.NomDVD, "oui");
-                foreach (int ID in ajoutDVD.Liste_Id_acteurs)
+                bool Doublon = false;
+                List<C_T_DVD> lTmpDVD = new G_T_DVD(sChConn).Lire("Id_DVD");
+                foreach (C_T_DVD TmpDVD in lTmpDVD)
                 {
-                    new G_T_Liste_Acteurs(sChConn).Ajouter(nID, ID);
+                    if (ajoutDVD.NomDVD == TmpDVD.D_Nom)
+                        Doublon = true;
                 }
-                RemplirDGVDVD();
+                if (!Doublon)
+                {
+                    int nID = new G_T_DVD(sChConn).Ajouter(ajoutDVD.NomDVD, false, ajoutDVD.GenreDVD, ajoutDVD.EmpruntMaxDVD, (double)ajoutDVD.Amende_p_jourDVD, ajoutDVD.SynopsisDVD);
+                    dtDVD.Rows.Add(nID, ajoutDVD.NomDVD, "oui");
+                    foreach (int ID in ajoutDVD.Liste_Id_acteurs)
+                    {
+                        new G_T_Liste_Acteurs(sChConn).Ajouter(nID, ID);
+                    }
+                    RemplirDGVDVD();
+                }
+                else
+                    MessageBox.Show("Un DVD du même nom est déjà présent dans la base de données !");
             }
         }
 
@@ -269,9 +281,45 @@ namespace Location_DVD_NS
             ajoutclient.ShowDialog();
             if (ajoutclient.confirmed)
             {
-                int nID = new G_T_Client(sChConn).Ajouter(ajoutclient.NomClient, ajoutclient.PrenomClient, ajoutclient.DateCotisation);
-                dtClients.Rows.Add(nID, ajoutclient.NomClient, ajoutclient.PrenomClient);
-                RemplirDGVClient();
+                bool Doublon = false;
+                List<C_T_Client> lTmpCLient = new G_T_Client(sChConn).Lire("Id_Client");
+                foreach (C_T_Client TmpClient in lTmpCLient)
+                {
+                    if (TmpClient.C_Nom == ajoutclient.NomClient && TmpClient.C_Prenom == ajoutclient.PrenomClient)
+                        Doublon = true;
+                }
+                if (!Doublon)
+                {
+                    int nID = new G_T_Client(sChConn).Ajouter(ajoutclient.NomClient, ajoutclient.PrenomClient, ajoutclient.DateCotisation);
+                    dtClients.Rows.Add(nID, ajoutclient.NomClient, ajoutclient.PrenomClient);
+                    RemplirDGVClient();
+
+                }
+                else
+                    MessageBox.Show("Le client entré est déjà présent dans la base de données !");
+            }
+        }
+
+        private void btnAjouterActeur_Click(object sender, EventArgs e)
+        {
+            EcranAjouterActeur ajoutacteur = new EcranAjouterActeur();
+            ajoutacteur.ShowDialog();
+            if (ajoutacteur.confirmed)
+            {
+                bool Doublon = false;
+                List<C_T_Acteur> lTmpActeur = new G_T_Acteur(sChConn).Lire("Id_Acteur");
+                foreach (C_T_Acteur TmpActeur in lTmpActeur)
+                {
+                    if (TmpActeur.A_Nom == ajoutacteur.NomActeur && TmpActeur.A_Prenom == ajoutacteur.PrenomActeur)
+                        Doublon = true;
+                }
+                if (!Doublon)
+                {
+                    new G_T_Acteur(sChConn).Ajouter(ajoutacteur.NomActeur, ajoutacteur.PrenomActeur, ajoutacteur.BioActeur);
+                    RemplirDGVActeurs();
+                }
+                else
+                    MessageBox.Show("Un acteur du même nom et prénom est déjà présent dans la base de données !");
             }
         }
 

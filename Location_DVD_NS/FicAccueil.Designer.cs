@@ -33,6 +33,7 @@
             this.dgvEmprunts = new System.Windows.Forms.DataGridView();
             this.dgvActeurs = new System.Windows.Forms.DataGridView();
             this.pFiltreClients = new System.Windows.Forms.Panel();
+            this.btnCotisation = new System.Windows.Forms.Button();
             this.rbtnFCEnOrdre = new System.Windows.Forms.RadioButton();
             this.lblAmende = new System.Windows.Forms.Label();
             this.tbAmende = new System.Windows.Forms.TextBox();
@@ -55,7 +56,7 @@
             this.btnRetourDVD = new System.Windows.Forms.Button();
             this.cbTousEmprunts = new System.Windows.Forms.CheckBox();
             this.dlgBordereau = new System.Windows.Forms.SaveFileDialog();
-            this.btnCotisation = new System.Windows.Forms.Button();
+            this.btnAjouterActeur = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmprunts)).BeginInit();
@@ -143,6 +144,16 @@
             this.pFiltreClients.Name = "pFiltreClients";
             this.pFiltreClients.Size = new System.Drawing.Size(155, 269);
             this.pFiltreClients.TabIndex = 4;
+            // 
+            // btnCotisation
+            // 
+            this.btnCotisation.Location = new System.Drawing.Point(3, 182);
+            this.btnCotisation.Name = "btnCotisation";
+            this.btnCotisation.Size = new System.Drawing.Size(149, 40);
+            this.btnCotisation.TabIndex = 13;
+            this.btnCotisation.Text = "Payer la cotisation du/des client(s) sélectionné(s) ?";
+            this.btnCotisation.UseVisualStyleBackColor = true;
+            this.btnCotisation.Click += new System.EventHandler(this.btnCotisation_Click);
             // 
             // rbtnFCEnOrdre
             // 
@@ -375,21 +386,22 @@
             this.cbTousEmprunts.UseVisualStyleBackColor = true;
             this.cbTousEmprunts.CheckedChanged += new System.EventHandler(this.cbTousEmprunts_CheckedChanged);
             // 
-            // btnCotisation
+            // btnAjouterActeur
             // 
-            this.btnCotisation.Location = new System.Drawing.Point(3, 182);
-            this.btnCotisation.Name = "btnCotisation";
-            this.btnCotisation.Size = new System.Drawing.Size(149, 40);
-            this.btnCotisation.TabIndex = 13;
-            this.btnCotisation.Text = "Payer la cotisation du/des client(s) sélectionné(s) ?";
-            this.btnCotisation.UseVisualStyleBackColor = true;
-            this.btnCotisation.Click += new System.EventHandler(this.btnCotisation_Click);
+            this.btnAjouterActeur.Location = new System.Drawing.Point(665, 292);
+            this.btnAjouterActeur.Name = "btnAjouterActeur";
+            this.btnAjouterActeur.Size = new System.Drawing.Size(240, 33);
+            this.btnAjouterActeur.TabIndex = 13;
+            this.btnAjouterActeur.Text = "Nouvel acteur";
+            this.btnAjouterActeur.UseVisualStyleBackColor = true;
+            this.btnAjouterActeur.Click += new System.EventHandler(this.btnAjouterActeur_Click);
             // 
             // EcranAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(917, 450);
+            this.Controls.Add(this.btnAjouterActeur);
             this.Controls.Add(this.cbTousEmprunts);
             this.Controls.Add(this.btnRetourDVD);
             this.Controls.Add(this.dgvDVDEmprunt);
@@ -449,6 +461,7 @@
         private System.Windows.Forms.CheckBox cbTousEmprunts;
         private System.Windows.Forms.SaveFileDialog dlgBordereau;
         private System.Windows.Forms.Button btnCotisation;
+        private System.Windows.Forms.Button btnAjouterActeur;
     }
 }
 
