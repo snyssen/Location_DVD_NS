@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 using System.IO;
 using iTextSharp.text;
@@ -58,6 +59,7 @@ namespace Location_DVD_NS
             {
                 dlgBordereau.Filter = "Fichier texte|*.txt|Tous fichiers|*.*";
                 RemplirDGV();
+                btnNotifications.NotificationNbr = CalculerNotifications();
             }
         }
         public EcranAccueil(string sChConn_) { this.sChConn = sChConn_; } // Constructeur "poubelle" pour accès aux méthodes du form
@@ -154,6 +156,7 @@ namespace Location_DVD_NS
                 EcranDetailsClient detailsClient = new EcranDetailsClient((int)dgvClients.SelectedRows[0].Cells[0].Value, sChConn);
                 detailsClient.ShowDialog();
                 RemplirDGVClient();
+                btnNotifications.NotificationNbr = CalculerNotifications();
             }
         }
         #endregion
@@ -352,6 +355,7 @@ namespace Location_DVD_NS
                 RemplirDGVDVD();
                 RemplirDGVEmprunt();
                 RemplirDGVDVDEmprunt();
+                btnNotifications.NotificationNbr = CalculerNotifications();
             }
         }
 
@@ -368,7 +372,14 @@ namespace Location_DVD_NS
             {
                 MessageBox.Show(result);
                 RemplirDGVClient();
+                btnNotifications.NotificationNbr = CalculerNotifications();
             }
+        }
+
+        private void btnNotifications_Click(object sender, EventArgs e)
+        {
+            EcranNotifications ecrannotif = new EcranNotifications(sChConn);
+            ecrannotif.Show();
         }
         #endregion
         #endregion
@@ -618,9 +629,7 @@ namespace Location_DVD_NS
 
         public bool CalculerRetardCot(DateTime DateCot) // retourne vrai si le client est en retard de cotisation (attend la date du dernier paiement de la cotisation en argument)
         {
-            //if (DateTime.Today.Date > DateCot.Date.AddMonths(1))
-            // DEBUG
-            if (DateTime.Today.Date > DateCot.Date.AddMonths(1))
+            if (DateTime.Today.Date > DateCot.Date.AddDays(1))
                 return true;
             else
                 return false;
@@ -775,6 +784,20 @@ namespace Location_DVD_NS
 
                 sw.Close();
             }
+        }
+
+        private int CalculerNotifications() // Calcule le nombre de notifications actuelles. Une notification = Un retard (retour OU cotisation)
+        {
+            int NbrNotifs = 0;
+            List<C_T_Client> lTmpClient = new G_T_Client(sChConn).Lire("Id_Client");
+            foreach(C_T_Client TmpClient in lTmpClient)
+            {
+                if (CalculerAmende(TmpClient.Id_Client) > 0)
+                    NbrNotifs++;
+                if (CalculerRetardCot((DateTime)TmpClient.C_Cotisation))
+                    NbrNotifs++;
+            }
+            return NbrNotifs;
         }
         #endregion
     }

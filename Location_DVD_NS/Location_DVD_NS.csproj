@@ -139,6 +139,18 @@
     <Compile Include="FicModifyString.Designer.cs">
       <DependentUpon>FicModifyString.cs</DependentUpon>
     </Compile>
+    <Compile Include="FicNotifications.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FicNotifications.Designer.cs">
+      <DependentUpon>FicNotifications.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NotificationButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NotificationButton.Designer.cs">
+      <DependentUpon>NotificationButton.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FicAccueil.resx">
@@ -170,6 +182,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FicModifyString.resx">
       <DependentUpon>FicModifyString.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FicNotifications.resx">
+      <DependentUpon>FicNotifications.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

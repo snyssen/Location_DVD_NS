@@ -57,6 +57,7 @@
             this.cbTousEmprunts = new System.Windows.Forms.CheckBox();
             this.dlgBordereau = new System.Windows.Forms.SaveFileDialog();
             this.btnAjouterActeur = new System.Windows.Forms.Button();
+            this.btnNotifications = new Location_DVD_NS.NotificationButton();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmprunts)).BeginInit();
@@ -396,11 +397,27 @@
             this.btnAjouterActeur.UseVisualStyleBackColor = true;
             this.btnAjouterActeur.Click += new System.EventHandler(this.btnAjouterActeur_Click);
             // 
+            // btnNotifications
+            // 
+            this.btnNotifications.ExteriorColor = System.Drawing.Color.DarkRed;
+            this.btnNotifications.InteriorColor = System.Drawing.Color.OrangeRed;
+            this.btnNotifications.Location = new System.Drawing.Point(419, 208);
+            this.btnNotifications.Name = "btnNotifications";
+            this.btnNotifications.NotificationEnabled = true;
+            this.btnNotifications.NotificationNbr = 0;
+            this.btnNotifications.NumberColor = System.Drawing.Color.White;
+            this.btnNotifications.Size = new System.Drawing.Size(240, 35);
+            this.btnNotifications.TabIndex = 14;
+            this.btnNotifications.Text = "Notifications";
+            this.btnNotifications.UseVisualStyleBackColor = true;
+            this.btnNotifications.Click += new System.EventHandler(this.btnNotifications_Click);
+            // 
             // EcranAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(917, 450);
+            this.Controls.Add(this.btnNotifications);
             this.Controls.Add(this.btnAjouterActeur);
             this.Controls.Add(this.cbTousEmprunts);
             this.Controls.Add(this.btnRetourDVD);
@@ -416,7 +433,7 @@
             this.Controls.Add(this.dgvDVD);
             this.Controls.Add(this.dgvClients);
             this.Name = "EcranAccueil";
-            this.Text = "Form1";
+            this.Text = "Tableau de bord";
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmprunts)).EndInit();
@@ -462,6 +479,7 @@
         private System.Windows.Forms.SaveFileDialog dlgBordereau;
         private System.Windows.Forms.Button btnCotisation;
         private System.Windows.Forms.Button btnAjouterActeur;
+        private NotificationButton btnNotifications;
     }
 }
 
