@@ -80,7 +80,8 @@ namespace Location_DVD_NS
 
         private void dgvDVD_SelectionChanged(object sender, EventArgs e)
         {
-            RemplirDGVActeurs();
+            if (!cbTousActeurs.Checked)
+                RemplirDGVActeurs();
         }
 
         private void dgvEmprunts_SelectionChanged(object sender, EventArgs e)
@@ -96,7 +97,7 @@ namespace Location_DVD_NS
                     {
                         int TmpID = (int)dgvEmprunts.SelectedRows[i].Cells[0].Value;
                         C_T_Emprunt TmpEmprunt = new G_T_Emprunt(sChConn).Lire_ID(TmpID);
-                        if (i >= 1)
+                        if (i >= 1) // On ne veut pas mettre le OR en premier passage
                             FiltreClients += " OR ";
                         FiltreClients += "[ID] = '";
                         FiltreClients += TmpEmprunt.Id_Client.ToString();
@@ -157,6 +158,39 @@ namespace Location_DVD_NS
                 detailsClient.ShowDialog();
                 RemplirDGVClient();
                 btnNotifications.NotificationNbr = CalculerNotifications();
+            }
+        }
+
+        private void dgvActeurs_SelectionChanged(object sender, EventArgs e)
+        {
+            if (cbTousActeurs.Checked) // On veut filtrer les DVD en fct des acteurs choisis
+            {
+                if (dgvActeurs.SelectedRows.Count > 0)
+                {
+                    string FiltreDVD = "";
+                    int i;
+                    List<C_T_Liste_Acteurs> lTmplActeurs = new G_T_Liste_Acteurs(sChConn).Lire("Id_Liste_Acteurs"); // Chargé en dehors de la boucle pour éviter de réaccéder à la DB à chaque boucle
+                    for (i = 0; i < dgvActeurs.SelectedRows.Count; i++)
+                    {
+                        int TmpID = (int)dgvActeurs.SelectedRows[i].Cells[3].Value; // On récupère l'ID de l'acteur sélectionné
+                        if (i >= 1) // On ne veut pas mettre le OR en premier passage
+                            FiltreDVD += " OR ";
+                        int j = 0;
+                        foreach (C_T_Liste_Acteurs TmplActeurs in lTmplActeurs)
+                        {
+                            if (TmplActeurs.Id_Acteur == TmpID) // On retrouve les tables Liste_Acteurs où l'acteur est repris
+                            {
+                                if (j >= 1) // On ne veut pas mettre le OR en premier passage
+                                    FiltreDVD += " OR ";
+                                FiltreDVD += "[ID] = '";
+                                FiltreDVD += TmplActeurs.Id_DVD.ToString();
+                                FiltreDVD += "'";
+                                j++;
+                            }
+                        }
+                    }
+                    bsDVD.Filter = FiltreDVD;
+                }
             }
         }
         #endregion
@@ -224,6 +258,21 @@ namespace Location_DVD_NS
             }
         }
 
+        private void cbTousActeurs_CheckedChanged(object sender, EventArgs e)
+        {
+            rbtnFDTous.Enabled = rbtnFDDispos.Enabled = rbtnFDPret.Enabled = !cbTousActeurs.Checked;
+            dgvActeurs_SelectionChanged(dgvActeurs, null);
+        }
+
+        private void rbtnFDTous_EnabledChanged(object sender, EventArgs e) // Je n'utilise l'event que sur le premier bouton vu que je change à chaque fois tout le groupe d'un coup mais que je ne veux effectuer une action qu'une seule fois
+        {
+            if (rbtnFDTous.Enabled) // On force le filtre "Tous"
+            {
+                rbtnFDTous.Checked = false; // On le passe d'abord à false pour être sûr de forcer son event même si il était déjà coché avant
+                rbtnFDTous.Checked = true; // Ceci déclenchera l'event "FiltreDVDheckedChanged" qui va donc remettre le filtre "Tous" | Pas besoin de forcer les autres rbtn.Checked à false vu qu'ils sont dans le même panel et changeront donc leur état automatiquement si nécessaire
+
+            }
+        }
         #endregion
         #region Boutons
         private void btnAjouterEmprunt_Click(object sender, EventArgs e)
@@ -531,22 +580,27 @@ namespace Location_DVD_NS
             dtActeurs.Columns.Add("Prénom");
             dtActeurs.Columns.Add("En savoir plus");
             dtActeurs.Columns.Add(new DataColumn("ID", System.Type.GetType("System.Int32")));
-            for (int i = 0; i < dgvDVD.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées (dans la DGV DVD)
+            if (!cbTousActeurs.Checked)
             {
-                int TmpID = (int)dgvDVD.SelectedRows[i].Cells[0].Value;
-                List<C_T_Liste_Acteurs> lTmplActeur = new G_T_Liste_Acteurs(sChConn).Lire("Id_Liste_Acteurs"); // Toutes les listes d'acteurs
-                List<C_T_Acteur> lTmpActeur = new G_T_Acteur(sChConn).Lire("Id_Acteur"); // Tous les acteurs
-                foreach (C_T_Liste_Acteurs TmplActeur in lTmplActeur) // On parcourt la liste d'acteurs
+                for (int i = 0; i < dgvDVD.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées (dans la DGV DVD)
                 {
-                    if ((int)TmplActeur.Id_DVD == TmpID) // Si une des tables reprend le DVD sélectionné...
+                    int TmpID = (int)dgvDVD.SelectedRows[i].Cells[0].Value;
+                    List<C_T_Liste_Acteurs> lTmplActeur = new G_T_Liste_Acteurs(sChConn).Lire("Id_Liste_Acteurs"); // Toutes les listes d'acteurs
+                    foreach (C_T_Liste_Acteurs TmplActeur in lTmplActeur) // On parcourt la liste d'acteurs
                     {
-                        foreach (C_T_Acteur TmpActeur in lTmpActeur) // On parcourt les acteurs                /!\ A SIMPLIFIER AVEC LIRE_ID /!\
+                        if ((int)TmplActeur.Id_DVD == TmpID) // Si une des tables reprend le DVD sélectionné...
                         {
-                            if ((int)TmpActeur.Id_Acteur == (int)TmplActeur.Id_Acteur) // Si l'acteur est repris dans la liste en cours...
-                                dtActeurs.Rows.Add(TmpActeur.A_Nom, TmpActeur.A_Prenom, TmpActeur.A_Bio, TmpActeur.Id_Acteur);
+                            C_T_Acteur TmpActeur = new G_T_Acteur(sChConn).Lire_ID((int)TmplActeur.Id_Acteur);
+                            dtActeurs.Rows.Add(TmpActeur.A_Nom, TmpActeur.A_Prenom, TmpActeur.A_Bio, TmpActeur.Id_Acteur);
                         }
                     }
                 }
+            }
+            else
+            {
+                List<C_T_Acteur> lTmpActeur = new G_T_Acteur(sChConn).Lire("A_Nom");
+                foreach (C_T_Acteur TmpActeur in lTmpActeur)
+                    dtActeurs.Rows.Add(TmpActeur.A_Nom, TmpActeur.A_Prenom, TmpActeur.A_Bio, TmpActeur.Id_Acteur);
             }
             bsActeurs = new BindingSource();
             bsActeurs.DataSource = dtActeurs;
@@ -629,7 +683,8 @@ namespace Location_DVD_NS
 
         public bool CalculerRetardCot(DateTime DateCot) // retourne vrai si le client est en retard de cotisation (attend la date du dernier paiement de la cotisation en argument)
         {
-            if (DateTime.Today.Date > DateCot.Date.AddDays(1))
+            // DEBUG
+            if (DateTime.Today.Date > DateCot.Date.AddDays(1)) // MIS A 1 JOUR DE RETARD POUR DEMONTRER LE FONCTIONNEMENT DES ALERTES DE RETARD
                 return true;
             else
                 return false;
@@ -786,15 +841,13 @@ namespace Location_DVD_NS
             }
         }
 
-        private int CalculerNotifications() // Calcule le nombre de notifications actuelles. Une notification = Un retard (retour OU cotisation)
+        private int CalculerNotifications() // Calcule le nombre de notifications actuelles. Une notification = Un client en retard (retour ET/OU cotisation)
         {
             int NbrNotifs = 0;
             List<C_T_Client> lTmpClient = new G_T_Client(sChConn).Lire("Id_Client");
             foreach(C_T_Client TmpClient in lTmpClient)
             {
-                if (CalculerAmende(TmpClient.Id_Client) > 0)
-                    NbrNotifs++;
-                if (CalculerRetardCot((DateTime)TmpClient.C_Cotisation))
+                if (CalculerAmende(TmpClient.Id_Client) > 0 || CalculerRetardCot((DateTime)TmpClient.C_Cotisation))
                     NbrNotifs++;
             }
             return NbrNotifs;

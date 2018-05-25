@@ -86,7 +86,7 @@ namespace Location_DVD_NS
                                                         int retard = tspan.Days - 1; // Et on la transforme en un nombre de jour => si > 0, retard; sinon encore dans les temps ( -1 sinon il compte le jour limite de rentrée)
                                                         if (retard > 0) // Si retard > 0 => retard => Amende à appliquer !
                                                         {
-                                                            TmpString2 = " Retard pour le retour de " + TmpDVD.D_Nom + " (ID=" + TmpDVD.Id_DVD + ") de " + retard.ToString() + " jours => amende = " + (retard * TmpDVD.D_Amende_p_J).ToString() + "€ (" + TmpDVD.D_Amende_p_J.ToString() + "€ par jour)";
+                                                            TmpString2 = " Retard pour le retour de " + TmpDVD.D_Nom + " (ID=" + TmpDVD.Id_DVD + ") de " + retard.ToString() + " jours => amende = " + (retard * TmpDVD.D_Amende_p_J).ToString() + "€ (" + TmpDVD.D_Amende_p_J.ToString() + "€ par jour).";
                                                             TmpString2 = TmpString2.PadLeft(148 - stringlen, '-'); // On s'assure que le string complet prendra l'ensemble de la rtb
                                                             if (FirstLine)
                                                             {
@@ -115,7 +115,29 @@ namespace Location_DVD_NS
             }
             else // Tri par DVD
             {
-
+                List<C_T_Quantite> lTmpQuantite = new G_T_Quantite(sChConn).Lire("Id_Quantite");
+                foreach (C_T_Quantite TmpQuantite in lTmpQuantite)
+                {
+                    if (TmpQuantite.Q_Retour == null) // => DVD non rentré
+                    {
+                        C_T_Emprunt TmpEmprunt = new G_T_Emprunt(sChConn).Lire_ID((int)TmpQuantite.Id_Emprunt); // On charge l'emprunt lié
+                        C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID((int)TmpQuantite.Id_DVD); // et le DVD
+                        DateTime DateEmprunt = (DateTime)TmpEmprunt.E_Emprunt; // Et la date de l'emprunt
+                        if (DateTime.Today > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max)) // Le DVD est en retard de retour
+                        {
+                            TimeSpan tspan = DateTime.Today.Subtract(DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max)); // On détermine la durée de temps entre aujourd'hui et la date limite de retour...
+                            int retard = tspan.Days - 1; // Et on la transforme en un nombre de jour (-1 sinon il compte le jour limite de rentrée)
+                            string TmpString = "\"" + TmpDVD.D_Nom + "\" aurait du être rentré il y a " + retard.ToString() + " jours. Il a été emprunté par ";
+                            int StringLen = TmpString.Length;
+                            C_T_Client TmpClient = new G_T_Client(sChConn).Lire_ID((int)TmpEmprunt.Id_Client);
+                            string TmpString2 = " " + TmpClient.C_Nom + " " + TmpClient.C_Prenom + ".";
+                            TmpString2.PadLeft(148 - StringLen, '-');
+                            TmpString += TmpString2;
+                            rtbInfos.Text += TmpString;
+                            rtbInfos.Text += "\n\n";
+                        }
+                    }
+                }
             }
         }
     }

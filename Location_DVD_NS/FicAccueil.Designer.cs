@@ -57,6 +57,7 @@
             this.cbTousEmprunts = new System.Windows.Forms.CheckBox();
             this.dlgBordereau = new System.Windows.Forms.SaveFileDialog();
             this.btnAjouterActeur = new System.Windows.Forms.Button();
+            this.cbTousActeurs = new System.Windows.Forms.CheckBox();
             this.btnNotifications = new Location_DVD_NS.NotificationButton();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).BeginInit();
@@ -129,6 +130,7 @@
             this.dgvActeurs.Size = new System.Drawing.Size(240, 150);
             this.dgvActeurs.TabIndex = 3;
             this.dgvActeurs.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvActeurs_CellDoubleClick);
+            this.dgvActeurs.SelectionChanged += new System.EventHandler(this.dgvActeurs_SelectionChanged);
             // 
             // pFiltreClients
             // 
@@ -143,7 +145,7 @@
             this.pFiltreClients.Controls.Add(this.rbtnFCTous);
             this.pFiltreClients.Location = new System.Drawing.Point(258, 13);
             this.pFiltreClients.Name = "pFiltreClients";
-            this.pFiltreClients.Size = new System.Drawing.Size(155, 269);
+            this.pFiltreClients.Size = new System.Drawing.Size(155, 230);
             this.pFiltreClients.TabIndex = 4;
             // 
             // btnCotisation
@@ -305,6 +307,7 @@
             this.rbtnFDTous.Text = "Tous";
             this.rbtnFDTous.UseVisualStyleBackColor = true;
             this.rbtnFDTous.CheckedChanged += new System.EventHandler(this.FiltreDVD_CheckedChanged);
+            this.rbtnFDTous.EnabledChanged += new System.EventHandler(this.rbtnFDTous_EnabledChanged);
             // 
             // dlgChargerDB
             // 
@@ -397,6 +400,17 @@
             this.btnAjouterActeur.UseVisualStyleBackColor = true;
             this.btnAjouterActeur.Click += new System.EventHandler(this.btnAjouterActeur_Click);
             // 
+            // cbTousActeurs
+            // 
+            this.cbTousActeurs.AutoSize = true;
+            this.cbTousActeurs.Location = new System.Drawing.Point(419, 265);
+            this.cbTousActeurs.Name = "cbTousActeurs";
+            this.cbTousActeurs.Size = new System.Drawing.Size(139, 17);
+            this.cbTousActeurs.TabIndex = 15;
+            this.cbTousActeurs.Text = "Afficher tous les acteurs";
+            this.cbTousActeurs.UseVisualStyleBackColor = true;
+            this.cbTousActeurs.CheckedChanged += new System.EventHandler(this.cbTousActeurs_CheckedChanged);
+            // 
             // btnNotifications
             // 
             this.btnNotifications.ExteriorColor = System.Drawing.Color.DarkRed;
@@ -417,6 +431,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(917, 450);
+            this.Controls.Add(this.cbTousActeurs);
             this.Controls.Add(this.btnNotifications);
             this.Controls.Add(this.btnAjouterActeur);
             this.Controls.Add(this.cbTousEmprunts);
@@ -480,6 +495,7 @@
         private System.Windows.Forms.Button btnCotisation;
         private System.Windows.Forms.Button btnAjouterActeur;
         private NotificationButton btnNotifications;
+        private System.Windows.Forms.CheckBox cbTousActeurs;
     }
 }
 
