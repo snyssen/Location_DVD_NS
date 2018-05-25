@@ -58,6 +58,12 @@
             this.dlgBordereau = new System.Windows.Forms.SaveFileDialog();
             this.btnAjouterActeur = new System.Windows.Forms.Button();
             this.cbTousActeurs = new System.Windows.Forms.CheckBox();
+            this.lbldgvClients = new System.Windows.Forms.Label();
+            this.lbldgvDVD = new System.Windows.Forms.Label();
+            this.lbldgvActeurs = new System.Windows.Forms.Label();
+            this.lbldgvDVDSelectEmprunt = new System.Windows.Forms.Label();
+            this.lbldgvEmprunts = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnNotifications = new Location_DVD_NS.NotificationButton();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).BeginInit();
@@ -66,20 +72,20 @@
             this.pFiltreClients.SuspendLayout();
             this.pFiltreDVD.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVDEmprunt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // dgvClients
             // 
             this.dgvClients.AllowUserToAddRows = false;
             this.dgvClients.AllowUserToDeleteRows = false;
-            this.dgvClients.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgvClients.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvClients.Location = new System.Drawing.Point(12, 12);
+            this.dgvClients.Location = new System.Drawing.Point(176, 32);
             this.dgvClients.Name = "dgvClients";
             this.dgvClients.ReadOnly = true;
             this.dgvClients.RowHeadersVisible = false;
             this.dgvClients.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvClients.Size = new System.Drawing.Size(240, 150);
+            this.dgvClients.Size = new System.Drawing.Size(300, 202);
             this.dgvClients.TabIndex = 0;
             this.dgvClients.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClients_CellDoubleClick);
             this.dgvClients.SelectionChanged += new System.EventHandler(this.dgvClients_SelectionChanged);
@@ -88,14 +94,13 @@
             // 
             this.dgvDVD.AllowUserToAddRows = false;
             this.dgvDVD.AllowUserToDeleteRows = false;
-            this.dgvDVD.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgvDVD.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDVD.Location = new System.Drawing.Point(12, 288);
+            this.dgvDVD.Location = new System.Drawing.Point(176, 341);
             this.dgvDVD.Name = "dgvDVD";
             this.dgvDVD.ReadOnly = true;
             this.dgvDVD.RowHeadersVisible = false;
             this.dgvDVD.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDVD.Size = new System.Drawing.Size(240, 150);
+            this.dgvDVD.Size = new System.Drawing.Size(300, 202);
             this.dgvDVD.TabIndex = 1;
             this.dgvDVD.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDVD_CellDoubleClick);
             this.dgvDVD.SelectionChanged += new System.EventHandler(this.dgvDVD_SelectionChanged);
@@ -104,14 +109,13 @@
             // 
             this.dgvEmprunts.AllowUserToAddRows = false;
             this.dgvEmprunts.AllowUserToDeleteRows = false;
-            this.dgvEmprunts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgvEmprunts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvEmprunts.Location = new System.Drawing.Point(419, 13);
+            this.dgvEmprunts.Location = new System.Drawing.Point(482, 32);
             this.dgvEmprunts.Name = "dgvEmprunts";
             this.dgvEmprunts.ReadOnly = true;
             this.dgvEmprunts.RowHeadersVisible = false;
             this.dgvEmprunts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvEmprunts.Size = new System.Drawing.Size(240, 150);
+            this.dgvEmprunts.Size = new System.Drawing.Size(300, 202);
             this.dgvEmprunts.TabIndex = 2;
             this.dgvEmprunts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvEmprunts_CellDoubleClick);
             this.dgvEmprunts.SelectionChanged += new System.EventHandler(this.dgvEmprunts_SelectionChanged);
@@ -120,20 +124,20 @@
             // 
             this.dgvActeurs.AllowUserToAddRows = false;
             this.dgvActeurs.AllowUserToDeleteRows = false;
-            this.dgvActeurs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgvActeurs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvActeurs.Location = new System.Drawing.Point(419, 288);
+            this.dgvActeurs.Location = new System.Drawing.Point(788, 341);
             this.dgvActeurs.Name = "dgvActeurs";
             this.dgvActeurs.ReadOnly = true;
             this.dgvActeurs.RowHeadersVisible = false;
             this.dgvActeurs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvActeurs.Size = new System.Drawing.Size(240, 150);
+            this.dgvActeurs.Size = new System.Drawing.Size(300, 202);
             this.dgvActeurs.TabIndex = 3;
             this.dgvActeurs.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvActeurs_CellDoubleClick);
             this.dgvActeurs.SelectionChanged += new System.EventHandler(this.dgvActeurs_SelectionChanged);
             // 
             // pFiltreClients
             // 
+            this.pFiltreClients.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pFiltreClients.Controls.Add(this.btnCotisation);
             this.pFiltreClients.Controls.Add(this.rbtnFCEnOrdre);
             this.pFiltreClients.Controls.Add(this.lblAmende);
@@ -143,7 +147,7 @@
             this.pFiltreClients.Controls.Add(this.rbtnFCRetardRetour);
             this.pFiltreClients.Controls.Add(this.rbtnFCRetards);
             this.pFiltreClients.Controls.Add(this.rbtnFCTous);
-            this.pFiltreClients.Location = new System.Drawing.Point(258, 13);
+            this.pFiltreClients.Location = new System.Drawing.Point(12, 12);
             this.pFiltreClients.Name = "pFiltreClients";
             this.pFiltreClients.Size = new System.Drawing.Size(155, 230);
             this.pFiltreClients.TabIndex = 4;
@@ -251,13 +255,14 @@
             // 
             // pFiltreDVD
             // 
+            this.pFiltreDVD.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pFiltreDVD.Controls.Add(this.lblFiltreDVD);
             this.pFiltreDVD.Controls.Add(this.rbtnFDPret);
             this.pFiltreDVD.Controls.Add(this.rbtnFDDispos);
             this.pFiltreDVD.Controls.Add(this.rbtnFDTous);
-            this.pFiltreDVD.Location = new System.Drawing.Point(258, 288);
+            this.pFiltreDVD.Location = new System.Drawing.Point(12, 321);
             this.pFiltreDVD.Name = "pFiltreDVD";
-            this.pFiltreDVD.Size = new System.Drawing.Size(155, 149);
+            this.pFiltreDVD.Size = new System.Drawing.Size(155, 222);
             this.pFiltreDVD.TabIndex = 5;
             // 
             // lblFiltreDVD
@@ -317,9 +322,9 @@
             // 
             // btnAjouterClient
             // 
-            this.btnAjouterClient.Location = new System.Drawing.Point(12, 169);
+            this.btnAjouterClient.Location = new System.Drawing.Point(482, 341);
             this.btnAjouterClient.Name = "btnAjouterClient";
-            this.btnAjouterClient.Size = new System.Drawing.Size(240, 33);
+            this.btnAjouterClient.Size = new System.Drawing.Size(300, 33);
             this.btnAjouterClient.TabIndex = 6;
             this.btnAjouterClient.Text = "Nouveau client";
             this.btnAjouterClient.UseVisualStyleBackColor = true;
@@ -327,9 +332,9 @@
             // 
             // btnAjouterEmprunt
             // 
-            this.btnAjouterEmprunt.Location = new System.Drawing.Point(12, 208);
+            this.btnAjouterEmprunt.Location = new System.Drawing.Point(482, 380);
             this.btnAjouterEmprunt.Name = "btnAjouterEmprunt";
-            this.btnAjouterEmprunt.Size = new System.Drawing.Size(240, 35);
+            this.btnAjouterEmprunt.Size = new System.Drawing.Size(300, 35);
             this.btnAjouterEmprunt.TabIndex = 7;
             this.btnAjouterEmprunt.Text = "Nouvel emprunt";
             this.btnAjouterEmprunt.UseVisualStyleBackColor = true;
@@ -337,9 +342,9 @@
             // 
             // btnAjouterDVD
             // 
-            this.btnAjouterDVD.Location = new System.Drawing.Point(12, 249);
+            this.btnAjouterDVD.Location = new System.Drawing.Point(482, 471);
             this.btnAjouterDVD.Name = "btnAjouterDVD";
-            this.btnAjouterDVD.Size = new System.Drawing.Size(240, 33);
+            this.btnAjouterDVD.Size = new System.Drawing.Size(300, 33);
             this.btnAjouterDVD.TabIndex = 8;
             this.btnAjouterDVD.Text = "Nouveau DVD";
             this.btnAjouterDVD.UseVisualStyleBackColor = true;
@@ -347,10 +352,13 @@
             // 
             // btnWipeDB
             // 
-            this.btnWipeDB.Location = new System.Drawing.Point(650, 430);
+            this.btnWipeDB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnWipeDB.ForeColor = System.Drawing.Color.Red;
+            this.btnWipeDB.Location = new System.Drawing.Point(12, 256);
             this.btnWipeDB.Name = "btnWipeDB";
-            this.btnWipeDB.Size = new System.Drawing.Size(15, 15);
+            this.btnWipeDB.Size = new System.Drawing.Size(98, 42);
             this.btnWipeDB.TabIndex = 9;
+            this.btnWipeDB.Text = "Vider la base de données ?";
             this.btnWipeDB.UseVisualStyleBackColor = true;
             this.btnWipeDB.Click += new System.EventHandler(this.btnWipeDB_Click);
             // 
@@ -358,31 +366,30 @@
             // 
             this.dgvDVDEmprunt.AllowUserToAddRows = false;
             this.dgvDVDEmprunt.AllowUserToDeleteRows = false;
-            this.dgvDVDEmprunt.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dgvDVDEmprunt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDVDEmprunt.Location = new System.Drawing.Point(665, 13);
+            this.dgvDVDEmprunt.Location = new System.Drawing.Point(788, 32);
             this.dgvDVDEmprunt.Name = "dgvDVDEmprunt";
             this.dgvDVDEmprunt.ReadOnly = true;
             this.dgvDVDEmprunt.RowHeadersVisible = false;
             this.dgvDVDEmprunt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDVDEmprunt.Size = new System.Drawing.Size(240, 150);
+            this.dgvDVDEmprunt.Size = new System.Drawing.Size(300, 202);
             this.dgvDVDEmprunt.TabIndex = 10;
             this.dgvDVDEmprunt.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDVDEmprunt_CellDoubleClick);
             // 
             // btnRetourDVD
             // 
-            this.btnRetourDVD.Location = new System.Drawing.Point(665, 169);
+            this.btnRetourDVD.Location = new System.Drawing.Point(788, 240);
             this.btnRetourDVD.Name = "btnRetourDVD";
-            this.btnRetourDVD.Size = new System.Drawing.Size(240, 33);
+            this.btnRetourDVD.Size = new System.Drawing.Size(300, 33);
             this.btnRetourDVD.TabIndex = 11;
-            this.btnRetourDVD.Text = "Retourner les DVD sélectionnés ?";
+            this.btnRetourDVD.Text = "Retourner le/les DVD sélectionné(s) ?";
             this.btnRetourDVD.UseVisualStyleBackColor = true;
             this.btnRetourDVD.Click += new System.EventHandler(this.btnRetourDVD_Click);
             // 
             // cbTousEmprunts
             // 
             this.cbTousEmprunts.AutoSize = true;
-            this.cbTousEmprunts.Location = new System.Drawing.Point(419, 169);
+            this.cbTousEmprunts.Location = new System.Drawing.Point(635, 14);
             this.cbTousEmprunts.Name = "cbTousEmprunts";
             this.cbTousEmprunts.Size = new System.Drawing.Size(147, 17);
             this.cbTousEmprunts.TabIndex = 12;
@@ -392,9 +399,9 @@
             // 
             // btnAjouterActeur
             // 
-            this.btnAjouterActeur.Location = new System.Drawing.Point(665, 292);
+            this.btnAjouterActeur.Location = new System.Drawing.Point(482, 510);
             this.btnAjouterActeur.Name = "btnAjouterActeur";
-            this.btnAjouterActeur.Size = new System.Drawing.Size(240, 33);
+            this.btnAjouterActeur.Size = new System.Drawing.Size(300, 33);
             this.btnAjouterActeur.TabIndex = 13;
             this.btnAjouterActeur.Text = "Nouvel acteur";
             this.btnAjouterActeur.UseVisualStyleBackColor = true;
@@ -403,7 +410,7 @@
             // cbTousActeurs
             // 
             this.cbTousActeurs.AutoSize = true;
-            this.cbTousActeurs.Location = new System.Drawing.Point(419, 265);
+            this.cbTousActeurs.Location = new System.Drawing.Point(949, 324);
             this.cbTousActeurs.Name = "cbTousActeurs";
             this.cbTousActeurs.Size = new System.Drawing.Size(139, 17);
             this.cbTousActeurs.TabIndex = 15;
@@ -411,16 +418,71 @@
             this.cbTousActeurs.UseVisualStyleBackColor = true;
             this.cbTousActeurs.CheckedChanged += new System.EventHandler(this.cbTousActeurs_CheckedChanged);
             // 
+            // lbldgvClients
+            // 
+            this.lbldgvClients.AutoSize = true;
+            this.lbldgvClients.Location = new System.Drawing.Point(173, 16);
+            this.lbldgvClients.Name = "lbldgvClients";
+            this.lbldgvClients.Size = new System.Drawing.Size(38, 13);
+            this.lbldgvClients.TabIndex = 16;
+            this.lbldgvClients.Text = "Clients";
+            // 
+            // lbldgvDVD
+            // 
+            this.lbldgvDVD.AutoSize = true;
+            this.lbldgvDVD.Location = new System.Drawing.Point(173, 325);
+            this.lbldgvDVD.Name = "lbldgvDVD";
+            this.lbldgvDVD.Size = new System.Drawing.Size(30, 13);
+            this.lbldgvDVD.TabIndex = 17;
+            this.lbldgvDVD.Text = "DVD";
+            // 
+            // lbldgvActeurs
+            // 
+            this.lbldgvActeurs.AutoSize = true;
+            this.lbldgvActeurs.Location = new System.Drawing.Point(788, 325);
+            this.lbldgvActeurs.Name = "lbldgvActeurs";
+            this.lbldgvActeurs.Size = new System.Drawing.Size(43, 13);
+            this.lbldgvActeurs.TabIndex = 18;
+            this.lbldgvActeurs.Text = "Acteurs";
+            // 
+            // lbldgvDVDSelectEmprunt
+            // 
+            this.lbldgvDVDSelectEmprunt.AutoSize = true;
+            this.lbldgvDVDSelectEmprunt.Location = new System.Drawing.Point(788, 16);
+            this.lbldgvDVDSelectEmprunt.Name = "lbldgvDVDSelectEmprunt";
+            this.lbldgvDVDSelectEmprunt.Size = new System.Drawing.Size(147, 13);
+            this.lbldgvDVDSelectEmprunt.TabIndex = 19;
+            this.lbldgvDVDSelectEmprunt.Text = "DVD de l\'emprunt sélectionné";
+            // 
+            // lbldgvEmprunts
+            // 
+            this.lbldgvEmprunts.AutoSize = true;
+            this.lbldgvEmprunts.Location = new System.Drawing.Point(479, 15);
+            this.lbldgvEmprunts.Name = "lbldgvEmprunts";
+            this.lbldgvEmprunts.Size = new System.Drawing.Size(51, 13);
+            this.lbldgvEmprunts.TabIndex = 20;
+            this.lbldgvEmprunts.Text = "Emprunts";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Location_DVD_NS.Properties.Resources._2000px_DVD_logo_svg;
+            this.pictureBox1.Location = new System.Drawing.Point(482, 240);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(300, 95);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 21;
+            this.pictureBox1.TabStop = false;
+            // 
             // btnNotifications
             // 
             this.btnNotifications.ExteriorColor = System.Drawing.Color.DarkRed;
             this.btnNotifications.InteriorColor = System.Drawing.Color.OrangeRed;
-            this.btnNotifications.Location = new System.Drawing.Point(419, 208);
+            this.btnNotifications.Location = new System.Drawing.Point(482, 421);
             this.btnNotifications.Name = "btnNotifications";
             this.btnNotifications.NotificationEnabled = true;
             this.btnNotifications.NotificationNbr = 0;
             this.btnNotifications.NumberColor = System.Drawing.Color.White;
-            this.btnNotifications.Size = new System.Drawing.Size(240, 35);
+            this.btnNotifications.Size = new System.Drawing.Size(300, 44);
             this.btnNotifications.TabIndex = 14;
             this.btnNotifications.Text = "Notifications";
             this.btnNotifications.UseVisualStyleBackColor = true;
@@ -430,7 +492,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(917, 450);
+            this.ClientSize = new System.Drawing.Size(1100, 555);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.lbldgvEmprunts);
+            this.Controls.Add(this.lbldgvDVDSelectEmprunt);
+            this.Controls.Add(this.lbldgvActeurs);
+            this.Controls.Add(this.lbldgvDVD);
+            this.Controls.Add(this.lbldgvClients);
             this.Controls.Add(this.cbTousActeurs);
             this.Controls.Add(this.btnNotifications);
             this.Controls.Add(this.btnAjouterActeur);
@@ -447,7 +515,12 @@
             this.Controls.Add(this.dgvEmprunts);
             this.Controls.Add(this.dgvDVD);
             this.Controls.Add(this.dgvClients);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "EcranAccueil";
+            this.ShowIcon = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tableau de bord";
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).EndInit();
@@ -458,6 +531,7 @@
             this.pFiltreDVD.ResumeLayout(false);
             this.pFiltreDVD.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVDEmprunt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -496,6 +570,12 @@
         private System.Windows.Forms.Button btnAjouterActeur;
         private NotificationButton btnNotifications;
         private System.Windows.Forms.CheckBox cbTousActeurs;
+        private System.Windows.Forms.Label lbldgvClients;
+        private System.Windows.Forms.Label lbldgvDVD;
+        private System.Windows.Forms.Label lbldgvActeurs;
+        private System.Windows.Forms.Label lbldgvDVDSelectEmprunt;
+        private System.Windows.Forms.Label lbldgvEmprunts;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

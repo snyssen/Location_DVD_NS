@@ -449,7 +449,7 @@ namespace Location_DVD_NS
             dtClients.Columns.Add(new DataColumn("ID", System.Type.GetType("System.Int32")));
             dtClients.Columns.Add("Nom");
             dtClients.Columns.Add("Prénom");
-            dtClients.Columns.Add("Dernier paiement cotisation");
+            dtClients.Columns.Add(new DataColumn("Dernier paiement cotisation", System.Type.GetType("System.DateTime")));
             dtClients.Columns.Add("Retard(s)");
             List<C_T_Client> lTmpClient = new G_T_Client(sChConn).Lire("C_Nom");
             foreach (C_T_Client TmpClient in lTmpClient)
@@ -468,12 +468,6 @@ namespace Location_DVD_NS
             bsClients = new BindingSource();
             bsClients.DataSource = dtClients;
             dgvClients.DataSource = bsClients;
-
-            //foreach (DataGridViewRow row in dgvClients.Rows)
-            //{
-            //    if (row.Cells[4].Value.ToString() != "Non")
-            //        row.DefaultCellStyle.BackColor = Color.Red;
-            //}
         }
 
         private void RemplirDGVEmprunt()
@@ -528,12 +522,6 @@ namespace Location_DVD_NS
             bsEmprunts = new BindingSource();
             bsEmprunts.DataSource = dtEmprunts;
             dgvEmprunts.DataSource = bsEmprunts;
-
-            //foreach (DataGridViewRow row in dgvEmprunts.Rows)
-            //{
-            //    if (row.Cells[2].Value.ToString() == "Non")
-            //        row.DefaultCellStyle.BackColor = Color.Red;
-            //}
         }
 
         private void RemplirDGVDVD()
@@ -565,12 +553,6 @@ namespace Location_DVD_NS
             bsDVD = new BindingSource();
             bsDVD.DataSource = dtDVD;
             dgvDVD.DataSource = bsDVD;
-
-            //foreach (DataGridViewRow row in dgvDVD.Rows)
-            //{
-            //    if (row.Cells[3].Value.ToString() == "Oui")
-            //        row.DefaultCellStyle.BackColor = Color.Red;
-            //}
         }
 
         private void RemplirDGVActeurs()
@@ -612,7 +594,7 @@ namespace Location_DVD_NS
             dtDVDEmprunt = new DataTable();
             dtDVDEmprunt.Columns.Add(new DataColumn("ID", System.Type.GetType("System.Int32")));
             dtDVDEmprunt.Columns.Add("Nom");
-            dtDVDEmprunt.Columns.Add("Date limite retour");
+            dtDVDEmprunt.Columns.Add(new DataColumn("Date limite retour", System.Type.GetType("System.DateTime")));
             dtDVDEmprunt.Columns.Add("Rentré le");
             dtDVDEmprunt.Columns.Add("Retard (o/n)");
             for (int i = 0; i < dgvEmprunts.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées (dans la DGV Emprunt)
@@ -626,19 +608,13 @@ namespace Location_DVD_NS
                     {
                         C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID((int)TmpQuantite.Id_DVD);
                         DateTime DateEmprunt = (DateTime)SelectedEmprunt.E_Emprunt;
-                        dtDVDEmprunt.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max).ToString(), TmpQuantite.Q_Retour == null ? "Non rentré" : TmpQuantite.Q_Retour.ToString(), TmpQuantite.Q_Retour == null ? (DateTime.Today > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "Oui" : "Non") : (TmpQuantite.Q_Retour > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "Oui" : "Non"));
+                        dtDVDEmprunt.Rows.Add(TmpDVD.Id_DVD, TmpDVD.D_Nom, DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max).ToString(), TmpQuantite.Q_Retour == null ? "Non rentré" : ((DateTime)TmpQuantite.Q_Retour).ToShortDateString(), TmpQuantite.Q_Retour == null ? (DateTime.Today > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "Oui" : "Non") : (TmpQuantite.Q_Retour > DateEmprunt.AddDays((double)TmpDVD.D_Emprunt_Max) ? "Oui" : "Non"));
                     }
                 }
             }
             bsDVDEmprunt = new BindingSource();
             bsDVDEmprunt.DataSource = dtDVDEmprunt;
             dgvDVDEmprunt.DataSource = bsDVDEmprunt;
-
-            //foreach (DataGridViewRow row in dgvDVDEmprunt.Rows)
-            //{
-            //    if (row.Cells[4].Value.ToString() == "Oui")
-            //        row.DefaultCellStyle.BackColor = Color.Red;
-            //}
         }
         #endregion
 

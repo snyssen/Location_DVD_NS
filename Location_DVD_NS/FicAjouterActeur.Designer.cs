@@ -107,7 +107,13 @@
             this.Controls.Add(this.lblBio);
             this.Controls.Add(this.tbNom);
             this.Controls.Add(this.lblNom);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "EcranAjouterActeur";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Ajouter acteur";
             this.ResumeLayout(false);
             this.PerformLayout();

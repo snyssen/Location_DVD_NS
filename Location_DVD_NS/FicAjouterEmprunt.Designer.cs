@@ -90,7 +90,13 @@
             this.Controls.Add(this.lblDVDEmprunt);
             this.Controls.Add(this.lbClientEmprunt);
             this.Controls.Add(this.lblClientEmprunt);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "EcranAjouterEmprunt";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Nouvel Emprunt";
             this.ResumeLayout(false);
             this.PerformLayout();

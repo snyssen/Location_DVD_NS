@@ -87,7 +87,13 @@
             this.Controls.Add(this.lblPrenom);
             this.Controls.Add(this.tbNom);
             this.Controls.Add(this.lblNom);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "EcranAjouterClient";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FicAjouterClient";
             this.ResumeLayout(false);
             this.PerformLayout();

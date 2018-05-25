@@ -243,6 +243,9 @@
             this.Controls.Add(this.lblGenre);
             this.Controls.Add(this.lblNomFilm);
             this.Name = "EcranDetailsDVD";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             ((System.ComponentModel.ISupportInitialize)(this.nudEmpruntMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudAmende_p_j)).EndInit();
             this.ResumeLayout(false);

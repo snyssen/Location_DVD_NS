@@ -150,7 +150,13 @@
             this.Controls.Add(this.llblBiographie);
             this.Controls.Add(this.lblPrenomActeur);
             this.Controls.Add(this.lblNomActeur);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "EcranDetailsActeur";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.ResumeLayout(false);
             this.PerformLayout();
 

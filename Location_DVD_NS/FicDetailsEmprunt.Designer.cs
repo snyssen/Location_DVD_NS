@@ -130,7 +130,13 @@
             this.Controls.Add(this.lblNomClient);
             this.Controls.Add(this.lblIDClient);
             this.Controls.Add(this.dgvDVD);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "EcranDetailsEmprunt";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
