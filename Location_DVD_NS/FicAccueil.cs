@@ -170,7 +170,6 @@ namespace Location_DVD_NS
             {
                 EcranDetailsActeur detailsActeur = new EcranDetailsActeur((int)dgvActeurs.SelectedRows[0].Cells[3].Value, sChConn);
                 detailsActeur.ShowDialog();
-                RemplirDGVActeurs();
             }
         }
 
