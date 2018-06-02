@@ -22,6 +22,7 @@ namespace Location_DVD_NS
         private string InternetLink;
         private bool Modifying = false;
         private int NbrActeurs = 0; // Nombres d'acteurs jouant dans le film = Nombre de tables Liste_Acteurs liées à ce DVD
+        private List<string> lActeursActu; // sotcke les acteurs jouant dans le DVD AVANT une modif pour les sélectionner en cas de modif
         public EcranDetailsDVD(int _ID_DVD, string _sChConn)
         {
             InitializeComponent();
@@ -43,7 +44,8 @@ namespace Location_DVD_NS
             lbActeurs.Items.Clear();
             if (!Modifying) // On n'est pas en train de modifier les données => On n'affiche que les acteurs qui jouent dans le film
             {
-                List<C_T_Liste_Acteurs> lTmplActeur = new G_T_Liste_Acteurs(sChConn).Lire("Id_Liste_Acteurs"); // Toutes les listes d'acteurs
+                lActeursActu = new List<string>();
+                List<C_T_Liste_Acteurs> lTmplActeur = new G_T_Liste_Acteurs(sChConn).Lire("A_Nom"); // Toutes les listes d'acteurs
                 NbrActeurs = 0;
                 foreach (C_T_Liste_Acteurs TmplActeur in lTmplActeur)
                 {
@@ -51,16 +53,22 @@ namespace Location_DVD_NS
                     {
                         C_T_Acteur TmpActeur = new G_T_Acteur(sChConn).Lire_ID((int)TmplActeur.Id_Acteur);
                         lbActeurs.Items.Add(TmpActeur.A_Nom + " " + TmpActeur.A_Prenom + " (ID=" + TmpActeur.Id_Acteur + ")");
+                        lActeursActu.Add(TmpActeur.A_Nom + " " + TmpActeur.A_Prenom + " (ID=" + TmpActeur.Id_Acteur + ")");
                         NbrActeurs++;
                     }
                 }
             }
             else // On est en train de modifier les données => Il faut afficher tous les acteurs de la base de données
             {
-                List<C_T_Acteur> lTmpActeur = new G_T_Acteur(sChConn).Lire("Id_Acteur");
+                List<C_T_Acteur> lTmpActeur = new G_T_Acteur(sChConn).Lire("A_Nom");
                 foreach (C_T_Acteur TmpActeur in lTmpActeur)
                 {
-                    lbActeurs.Items.Add(TmpActeur.A_Nom + " " + TmpActeur.A_Prenom + " (ID=" + TmpActeur.Id_Acteur + ")");
+                    string TmpStringActeur = TmpActeur.A_Nom + " " + TmpActeur.A_Prenom + " (ID=" + TmpActeur.Id_Acteur + ")";
+                    lbActeurs.Items.Add(TmpStringActeur);
+                    if (lActeursActu != null)
+                        foreach (string Acteur in lActeursActu)
+                            if (Acteur == TmpStringActeur)
+                                lbActeurs.SetSelected(lbActeurs.Items.Count - 1, true);
                 }
             }
 

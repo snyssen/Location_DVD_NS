@@ -81,7 +81,31 @@ namespace Location_DVD_NS
         private void dgvDVD_SelectionChanged(object sender, EventArgs e)
         {
             if (!cbTousActeurs.Checked)
-                RemplirDGVActeurs();
+            {
+                if (dgvDVD.SelectedRows.Count > 0)
+                {
+                    string FiltreActeurs = "";
+                    List<C_T_Liste_Acteurs> lTmplActeurs = new G_T_Liste_Acteurs(sChConn).Lire("Id_Liste_Acteurs");
+                    int j = 0;
+                    for (int i = 0; i < dgvDVD.SelectedRows.Count; i++)
+                    {
+                        foreach (C_T_Liste_Acteurs TmplActeurs in lTmplActeurs)
+                        {
+                            if (TmplActeurs.Id_DVD == (int)dgvDVD.SelectedRows[i].Cells[0].Value) // On a retrouvé un Acteur qui joue dans le DVD sélectionné
+                            {
+                                if (j >= 1) // On ne veut pas mettre le OR en premier passage
+                                    FiltreActeurs += " OR ";
+                                j = 1;
+                                FiltreActeurs += "[ID] = '";
+                                FiltreActeurs += TmplActeurs.Id_Acteur.ToString();
+                                FiltreActeurs += "'";
+                            }
+                        }
+                    }
+                    bsActeurs.Filter = FiltreActeurs;
+                }
+            }
+                //RemplirDGVActeurs();
         }
 
         private void dgvEmprunts_SelectionChanged(object sender, EventArgs e)
@@ -261,7 +285,13 @@ namespace Location_DVD_NS
         private void cbTousActeurs_CheckedChanged(object sender, EventArgs e)
         {
             rbtnFDTous.Enabled = rbtnFDDispos.Enabled = rbtnFDPret.Enabled = !cbTousActeurs.Checked;
-            dgvActeurs_SelectionChanged(dgvActeurs, null);
+            if (cbTousActeurs.Checked)
+            {
+                bsActeurs.Filter = null;
+                dgvActeurs_SelectionChanged(dgvActeurs, null);
+            }
+            else
+                dgvDVD_SelectionChanged(dgvDVD, null);
         }
 
         private void rbtnFDTous_EnabledChanged(object sender, EventArgs e) // Je n'utilise l'event que sur le premier bouton vu que je change à chaque fois tout le groupe d'un coup mais que je ne veux effectuer une action qu'une seule fois
@@ -321,6 +351,7 @@ namespace Location_DVD_NS
                         new G_T_Liste_Acteurs(sChConn).Ajouter(nID, ID);
                     }
                     RemplirDGVDVD();
+                    RemplirDGVActeurs();
                 }
                 else
                     MessageBox.Show("Un DVD du même nom est déjà présent dans la base de données !");
@@ -562,28 +593,28 @@ namespace Location_DVD_NS
             dtActeurs.Columns.Add("Prénom");
             dtActeurs.Columns.Add("En savoir plus");
             dtActeurs.Columns.Add(new DataColumn("ID", System.Type.GetType("System.Int32")));
-            if (!cbTousActeurs.Checked)
-            {
-                for (int i = 0; i < dgvDVD.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées (dans la DGV DVD)
-                {
-                    int TmpID = (int)dgvDVD.SelectedRows[i].Cells[0].Value;
-                    List<C_T_Liste_Acteurs> lTmplActeur = new G_T_Liste_Acteurs(sChConn).Lire("Id_Liste_Acteurs"); // Toutes les listes d'acteurs
-                    foreach (C_T_Liste_Acteurs TmplActeur in lTmplActeur) // On parcourt la liste d'acteurs
-                    {
-                        if ((int)TmplActeur.Id_DVD == TmpID) // Si une des tables reprend le DVD sélectionné...
-                        {
-                            C_T_Acteur TmpActeur = new G_T_Acteur(sChConn).Lire_ID((int)TmplActeur.Id_Acteur);
-                            dtActeurs.Rows.Add(TmpActeur.A_Nom, TmpActeur.A_Prenom, TmpActeur.A_Bio, TmpActeur.Id_Acteur);
-                        }
-                    }
-                }
-            }
-            else
-            {
+            //if (!cbTousActeurs.Checked)
+            //{
+            //    for (int i = 0; i < dgvDVD.SelectedRows.Count; i++) // On parcourt les lignes sélectionnées (dans la DGV DVD)
+            //    {
+            //        int TmpID = (int)dgvDVD.SelectedRows[i].Cells[0].Value;
+            //        List<C_T_Liste_Acteurs> lTmplActeur = new G_T_Liste_Acteurs(sChConn).Lire("Id_Liste_Acteurs"); // Toutes les listes d'acteurs
+            //        foreach (C_T_Liste_Acteurs TmplActeur in lTmplActeur) // On parcourt la liste d'acteurs
+            //        {
+            //            if ((int)TmplActeur.Id_DVD == TmpID) // Si une des tables reprend le DVD sélectionné...
+            //            {
+            //                C_T_Acteur TmpActeur = new G_T_Acteur(sChConn).Lire_ID((int)TmplActeur.Id_Acteur);
+            //                dtActeurs.Rows.Add(TmpActeur.A_Nom, TmpActeur.A_Prenom, TmpActeur.A_Bio, TmpActeur.Id_Acteur);
+            //            }
+            //        }
+            //    }
+            //}
+            //else
+            //{
                 List<C_T_Acteur> lTmpActeur = new G_T_Acteur(sChConn).Lire("A_Nom");
                 foreach (C_T_Acteur TmpActeur in lTmpActeur)
                     dtActeurs.Rows.Add(TmpActeur.A_Nom, TmpActeur.A_Prenom, TmpActeur.A_Bio, TmpActeur.Id_Acteur);
-            }
+            //}
             bsActeurs = new BindingSource();
             bsActeurs.DataSource = dtActeurs;
             dgvActeurs.DataSource = bsActeurs;
@@ -702,19 +733,14 @@ namespace Location_DVD_NS
                 MessageBox.Show("La base de données est maintenant vide.", "Opération effectuée", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-
-        private void GenererBordereau() // Génère le bordereau dans un fichier PDF (vide pour le moment)
-        {
-
-        }
-
         private void GenererBordereauPlainText(int ID_Client, List<int> lID_DVD, int ID_Emprunt) // Génère le bordereau en ASCII dans un fichier texte
         {
+            C_T_Client TmpClient = new G_T_Client(sChConn).Lire_ID(ID_Client);
+            dlgBordereau.FileName = DateTime.Today.ToShortDateString().Replace('/', '-') + "_" + TmpClient.C_Nom.Replace(' ', '_').Replace('é', 'e').Replace('è', 'e').Replace('ê', 'e').Replace('î', 'i').ToUpper() + "_" + TmpClient.C_Prenom.Replace(' ', '_').Replace('é', 'e').Replace('è', 'e').Replace('ê', 'e').Replace('î', 'i').ToLower();
             if (dlgBordereau.ShowDialog() == DialogResult.OK)
             {
                 string TmpString, TmpStringR;
                 StreamWriter sw = new StreamWriter(dlgBordereau.FileName);
-                C_T_Client TmpClient = new G_T_Client(sChConn).Lire_ID(ID_Client);
                 C_T_Emprunt TmpEmprunt = new G_T_Emprunt(sChConn).Lire_ID(ID_Emprunt);
                 TmpString = "Client n° " + TmpClient.Id_Client;
                 TmpString = TmpString.PadRight(43); // 43 = 86/2

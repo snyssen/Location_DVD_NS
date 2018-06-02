@@ -19,7 +19,7 @@ namespace Location_DVD_NS
         public string NomDVD;
         public string GenreDVD;
         public int EmpruntMaxDVD;
-        public int Amende_p_jourDVD;
+        public double Amende_p_jourDVD;
         public string SynopsisDVD;
         public List<int> Liste_Id_acteurs;
         public bool Confirmed = false;
@@ -34,7 +34,7 @@ namespace Location_DVD_NS
         private void RemplirListeActeurs()
         {
             lbListeActeurs.Items.Clear();
-            List<C_T_Acteur> lTmpActeur = new G_T_Acteur(sChConn).Lire("Id_Acteur");
+            List<C_T_Acteur> lTmpActeur = new G_T_Acteur(sChConn).Lire("A_Nom");
             foreach (C_T_Acteur TmpActeur in lTmpActeur)
                 lbListeActeurs.Items.Add(TmpActeur.A_Nom.ToString() + " " + TmpActeur.A_Prenom.ToString() + " (ID=" + TmpActeur.Id_Acteur + ")");
         }
@@ -71,7 +71,7 @@ namespace Location_DVD_NS
                 NomDVD = tbNom.Text;
                 GenreDVD = tbGenre.Text;
                 EmpruntMaxDVD = (int)nudEmpruntMax.Value;
-                Amende_p_jourDVD = (int)nudAmende_p_jour.Value;
+                Amende_p_jourDVD = (double)nudAmende_p_jour.Value;
                 SynopsisDVD = tbSynopsis.Text;
                 Liste_Id_acteurs = new List<int>();
                 foreach (string lTmp in lbListeActeurs.SelectedItems)
