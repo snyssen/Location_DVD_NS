@@ -23,7 +23,7 @@ namespace Location_DVD_NS
                 Application.Run(new EcranAccueil());
             }
         }
-        static bool ExisteInstance()
+        static bool ExisteInstance() // Vérifie si le programme n'a pas déjà été lancé
         {
             System.Diagnostics.Process actu = System.Diagnostics.Process.GetCurrentProcess();
             System.Diagnostics.Process[] acti = System.Diagnostics.Process.GetProcesses();

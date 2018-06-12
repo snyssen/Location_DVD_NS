@@ -63,9 +63,19 @@ namespace Location_DVD_NS.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _2000px_DVD_logo_svg {
+        internal static System.Drawing.Bitmap LogoDVD {
             get {
-                object obj = ResourceManager.GetObject("2000px-DVD_logo.svg", resourceCulture);
+                object obj = ResourceManager.GetObject("LogoDVD", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Refresh_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("Refresh_32x32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

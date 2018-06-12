@@ -63,8 +63,9 @@
             this.lbldgvActeurs = new System.Windows.Forms.Label();
             this.lbldgvDVDSelectEmprunt = new System.Windows.Forms.Label();
             this.lbldgvEmprunts = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnNotifications = new Location_DVD_NS.NotificationButton();
+            this.btnRefresh = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmprunts)).BeginInit();
@@ -463,16 +464,6 @@
             this.lbldgvEmprunts.TabIndex = 20;
             this.lbldgvEmprunts.Text = "Emprunts";
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::Location_DVD_NS.Properties.Resources._2000px_DVD_logo_svg;
-            this.pictureBox1.Location = new System.Drawing.Point(482, 240);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(300, 95);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 21;
-            this.pictureBox1.TabStop = false;
-            // 
             // btnNotifications
             // 
             this.btnNotifications.ExteriorColor = System.Drawing.Color.DarkRed;
@@ -488,11 +479,32 @@
             this.btnNotifications.UseVisualStyleBackColor = true;
             this.btnNotifications.Click += new System.EventHandler(this.btnNotifications_Click);
             // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Image = global::Location_DVD_NS.Properties.Resources.Refresh_32x32;
+            this.btnRefresh.Location = new System.Drawing.Point(116, 261);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(32, 32);
+            this.btnRefresh.TabIndex = 22;
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Location_DVD_NS.Properties.Resources.LogoDVD;
+            this.pictureBox1.Location = new System.Drawing.Point(482, 240);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(300, 95);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 21;
+            this.pictureBox1.TabStop = false;
+            // 
             // EcranAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1100, 555);
+            this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lbldgvEmprunts);
             this.Controls.Add(this.lbldgvDVDSelectEmprunt);
@@ -576,6 +588,7 @@
         private System.Windows.Forms.Label lbldgvDVDSelectEmprunt;
         private System.Windows.Forms.Label lbldgvEmprunts;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button btnRefresh;
     }
 }
 

@@ -365,6 +365,7 @@ namespace Location_DVD_NS
             {
                 bool Doublon = false;
                 List<C_T_Client> lTmpCLient = new G_T_Client(sChConn).Lire("Id_Client");
+                // Vérification de doublon
                 foreach (C_T_Client TmpClient in lTmpCLient)
                 {
                     if (TmpClient.C_Nom == ajoutclient.NomClient && TmpClient.C_Prenom == ajoutclient.PrenomClient)
@@ -390,6 +391,7 @@ namespace Location_DVD_NS
             {
                 bool Doublon = false;
                 List<C_T_Acteur> lTmpActeur = new G_T_Acteur(sChConn).Lire("Id_Acteur");
+                // Vérification de doublon
                 foreach (C_T_Acteur TmpActeur in lTmpActeur)
                 {
                     if (TmpActeur.A_Nom == ajoutacteur.NomActeur && TmpActeur.A_Prenom == ajoutacteur.PrenomActeur)
@@ -459,6 +461,17 @@ namespace Location_DVD_NS
         {
             EcranNotifications ecrannotif = new EcranNotifications(sChConn);
             ecrannotif.Show();
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e) // refresh des dgvs + reset des filtres
+        {
+            RemplirDGV(); // refresh
+            // reset filtres
+            cbTousActeurs.Checked = cbTousEmprunts.Checked = false;
+            rbtnFCTous.Enabled = rbtnFCEnOrdre.Enabled = rbtnFCRetards.Enabled = rbtnFCRetardRetour.Enabled = rbtnFCRetardCot.Enabled = true;
+            rbtnFDTous.Enabled = rbtnFDDispos.Enabled = rbtnFDPret.Enabled = true;
+            rbtnFCTous_EnabledChanged(null, null);
+            rbtnFDTous_EnabledChanged(null, null);
         }
         #endregion
         #endregion
