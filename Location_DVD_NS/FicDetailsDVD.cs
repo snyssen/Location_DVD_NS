@@ -23,6 +23,7 @@ namespace Location_DVD_NS
         private bool Modifying = false;
         private int NbrActeurs = 0; // Nombres d'acteurs jouant dans le film = Nombre de tables Liste_Acteurs liées à ce DVD
         private List<string> lActeursActu; // sotcke les acteurs jouant dans le DVD AVANT une modif pour les sélectionner en cas de modif
+        public bool Modified = false;
         public EcranDetailsDVD(int _ID_DVD, string _sChConn)
         {
             InitializeComponent();
@@ -210,6 +211,7 @@ namespace Location_DVD_NS
                         }
                         ChangeState();
                         RemplirDonnees();
+                        Modified = true;
                     }
                 }
             }

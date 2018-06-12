@@ -23,6 +23,7 @@ namespace Location_DVD_NS
         private DataTable dtDVD;
         private BindingSource bsDVD;
         private string sChConn;
+        public bool Modified = false;
         public EcranDetailsEmprunt(int _ID_Emprunt, string _sChConn)
         {
             InitializeComponent();
@@ -93,6 +94,7 @@ namespace Location_DVD_NS
                 }
                 MessageBox.Show((i - j) + " DVD récupérés");
                 RemplirDGVDVD();
+                Modified = true;
             }
             
         }

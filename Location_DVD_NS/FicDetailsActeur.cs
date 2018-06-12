@@ -20,6 +20,7 @@ namespace Location_DVD_NS
         private string sChConn;
         private string InternetLink;
         private bool Modifying = false;
+        public bool Modified = false;
         public EcranDetailsActeur(int _ID_Acteur, string _sChConn)
         {
             InitializeComponent();
@@ -87,6 +88,7 @@ namespace Location_DVD_NS
                     new G_T_Acteur(sChConn).Modifier(SelectedActeur.Id_Acteur, tbNomActeur.Text, tbPrenomActeur.Text, InternetLink);
                     ChangeState();
                     RemplirDonnees();
+                    Modified = true;
                 }
             }
         }

@@ -8,10 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
-
 using System.IO;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 
 using Projet_LOCATION_DVD.Classes;
 using Projet_LOCATION_DVD.Acces;
@@ -138,7 +135,8 @@ namespace Location_DVD_NS
             {
                 EcranDetailsEmprunt detailsEmprunt = new EcranDetailsEmprunt((int)dgvEmprunts.SelectedRows[0].Cells[0].Value, sChConn);
                 detailsEmprunt.ShowDialog();
-                RemplirDGV();
+                if (detailsEmprunt.Modified)
+                    RemplirDGV();
             }
         }
 
@@ -148,8 +146,11 @@ namespace Location_DVD_NS
             {
                 EcranDetailsDVD detailsDVD = new EcranDetailsDVD((int)dgvDVD.SelectedRows[0].Cells[0].Value, sChConn);
                 detailsDVD.ShowDialog();
-                RemplirDGVDVD();
-                RemplirDGVDVDEmprunt();
+                if (detailsDVD.Modified)
+                {
+                    RemplirDGVDVD();
+                    RemplirDGVDVDEmprunt();
+                }
             }
         }
 
@@ -159,8 +160,11 @@ namespace Location_DVD_NS
             {
                 EcranDetailsDVD detailsDVD = new EcranDetailsDVD((int)dgvDVDEmprunt.SelectedRows[0].Cells[0].Value, sChConn);
                 detailsDVD.ShowDialog();
-                RemplirDGVDVD();
-                RemplirDGVDVDEmprunt();
+                if (detailsDVD.Modified)
+                {
+                    RemplirDGVDVD();
+                    RemplirDGVDVDEmprunt();
+                }
             }
         }
 
@@ -170,6 +174,8 @@ namespace Location_DVD_NS
             {
                 EcranDetailsActeur detailsActeur = new EcranDetailsActeur((int)dgvActeurs.SelectedRows[0].Cells[3].Value, sChConn);
                 detailsActeur.ShowDialog();
+                if (detailsActeur.Modified)
+                    RemplirDGVActeurs();
             }
         }
 
@@ -179,8 +185,11 @@ namespace Location_DVD_NS
             {
                 EcranDetailsClient detailsClient = new EcranDetailsClient((int)dgvClients.SelectedRows[0].Cells[0].Value, sChConn);
                 detailsClient.ShowDialog();
-                RemplirDGVClient();
-                btnNotifications.NotificationNbr = CalculerNotifications();
+                if (detailsClient.Modified)
+                {
+                    RemplirDGVClient();
+                    btnNotifications.NotificationNbr = CalculerNotifications();
+                }
             }
         }
 
@@ -433,6 +442,7 @@ namespace Location_DVD_NS
                         j++;
                 }
                 MessageBox.Show((i - j) + " DVD récupérés");
+
                 RemplirDGVDVD();
                 RemplirDGVEmprunt();
                 RemplirDGVDVDEmprunt();
@@ -463,7 +473,7 @@ namespace Location_DVD_NS
             ecrannotif.Show();
         }
 
-        private void btnRefresh_Click(object sender, EventArgs e) // refresh des dgvs + reset des filtres
+        private void btnRefresh_Click(object sender, EventArgs e) // refresh des dgvs
         {
             RemplirDGV(); // refresh
             // reset filtres
@@ -472,6 +482,12 @@ namespace Location_DVD_NS
             rbtnFDTous.Enabled = rbtnFDDispos.Enabled = rbtnFDPret.Enabled = true;
             rbtnFCTous_EnabledChanged(null, null);
             rbtnFDTous_EnabledChanged(null, null);
+        }
+
+        private void llblCopyright_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/snyssen");
+            llblCopyright.LinkVisited = true;
         }
         #endregion
         #endregion

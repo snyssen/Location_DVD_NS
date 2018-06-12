@@ -66,6 +66,7 @@
             this.btnNotifications = new Location_DVD_NS.NotificationButton();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.llblCopyright = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmprunts)).BeginInit();
@@ -257,6 +258,7 @@
             // pFiltreDVD
             // 
             this.pFiltreDVD.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pFiltreDVD.Controls.Add(this.llblCopyright);
             this.pFiltreDVD.Controls.Add(this.lblFiltreDVD);
             this.pFiltreDVD.Controls.Add(this.rbtnFDPret);
             this.pFiltreDVD.Controls.Add(this.rbtnFDDispos);
@@ -499,6 +501,17 @@
             this.pictureBox1.TabIndex = 21;
             this.pictureBox1.TabStop = false;
             // 
+            // llblCopyright
+            // 
+            this.llblCopyright.AutoSize = true;
+            this.llblCopyright.Location = new System.Drawing.Point(0, 205);
+            this.llblCopyright.Name = "llblCopyright";
+            this.llblCopyright.Size = new System.Drawing.Size(86, 13);
+            this.llblCopyright.TabIndex = 23;
+            this.llblCopyright.TabStop = true;
+            this.llblCopyright.Text = "© Simon Nyssen";
+            this.llblCopyright.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblCopyright_LinkClicked);
+            // 
             // EcranAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -589,6 +602,7 @@
         private System.Windows.Forms.Label lbldgvEmprunts;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.LinkLabel llblCopyright;
     }
 }
 

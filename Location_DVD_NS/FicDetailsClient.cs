@@ -19,6 +19,7 @@ namespace Location_DVD_NS
         private C_T_Client SelectedClient;
         private string sChConn;
         private bool Modifying = false;
+        public bool Modified = false;
         public EcranDetailsClient(int _ID_Client, string _sChConn)
         {
             InitializeComponent();
@@ -73,6 +74,7 @@ namespace Location_DVD_NS
                     new G_T_Client(sChConn).Modifier(SelectedClient.Id_Client, tbNom.Text, tbPrenom.Text, SelectedClient.C_Cotisation);
                     ChangeState();
                     RemplirDonnees();
+                    Modified = true;
                 }
             }
         }
