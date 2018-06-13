@@ -34,12 +34,13 @@ namespace Location_DVD_NS
             this.Text = "Client n°" + SelectedClient.Id_Client;
             tbNom.Text = SelectedClient.C_Nom;
             tbPrenom.Text = SelectedClient.C_Prenom;
+            tbMail.Text = SelectedClient.C_Mail;
         }
 
         private void ChangeState()
         {
             Modifying = !Modifying;
-            tbNom.Enabled = tbPrenom.Enabled = Modifying;
+            tbNom.Enabled = tbPrenom.Enabled = tbMail.Enabled = Modifying;
             btnCotisation.Enabled = !Modifying;
             if (Modifying)
             {
@@ -67,11 +68,11 @@ namespace Location_DVD_NS
             }
             else // Confirmer
             {
-                if (tbNom.Text == "" || tbPrenom.Text == "")
+                if (tbNom.Text == "" || tbPrenom.Text == "" || tbMail.Text == "")
                     MessageBox.Show("Assurez-vous d'avoir rempli toutes les informations !");
                 else
                 {
-                    new G_T_Client(sChConn).Modifier(SelectedClient.Id_Client, tbNom.Text, tbPrenom.Text, SelectedClient.C_Cotisation);
+                    new G_T_Client(sChConn).Modifier(SelectedClient.Id_Client, tbNom.Text, tbPrenom.Text, SelectedClient.C_Cotisation, tbMail.Text);
                     ChangeState();
                     RemplirDonnees();
                     Modified = true;
@@ -81,8 +82,19 @@ namespace Location_DVD_NS
 
         private void btnCotisation_Click(object sender, EventArgs e)
         {
-            new G_T_Client(sChConn).Modifier(SelectedClient.Id_Client, SelectedClient.C_Nom, SelectedClient.C_Prenom, DateTime.Today);
+            new G_T_Client(sChConn).Modifier(SelectedClient.Id_Client, SelectedClient.C_Nom, SelectedClient.C_Prenom, DateTime.Today, SelectedClient.C_Mail);
             MessageBox.Show("Cotisation payée ce " + DateTime.Today.ToShortDateString());
+        }
+
+        private void llblMail_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (tbMail.Text.Contains("@"))
+            {
+                System.Diagnostics.Process.Start("mailto:" + tbMail.Text);
+                llblMail.LinkVisited = true;
+            }
+            else
+                MessageBox.Show("Adresse mail non valide");
         }
     }
 }

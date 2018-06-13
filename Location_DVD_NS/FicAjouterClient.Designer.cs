@@ -33,6 +33,8 @@
             this.tbPrenom = new System.Windows.Forms.TextBox();
             this.lblPrenom = new System.Windows.Forms.Label();
             this.btnConfirmer = new System.Windows.Forms.Button();
+            this.tbMail = new System.Windows.Forms.TextBox();
+            this.lblMail = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblNom
@@ -69,7 +71,7 @@
             // 
             // btnConfirmer
             // 
-            this.btnConfirmer.Location = new System.Drawing.Point(12, 95);
+            this.btnConfirmer.Location = new System.Drawing.Point(12, 129);
             this.btnConfirmer.Name = "btnConfirmer";
             this.btnConfirmer.Size = new System.Drawing.Size(210, 34);
             this.btnConfirmer.TabIndex = 4;
@@ -77,11 +79,29 @@
             this.btnConfirmer.UseVisualStyleBackColor = true;
             this.btnConfirmer.Click += new System.EventHandler(this.btnConfirmer_Click);
             // 
+            // tbMail
+            // 
+            this.tbMail.Location = new System.Drawing.Point(12, 103);
+            this.tbMail.Name = "tbMail";
+            this.tbMail.Size = new System.Drawing.Size(210, 20);
+            this.tbMail.TabIndex = 6;
+            // 
+            // lblMail
+            // 
+            this.lblMail.AutoSize = true;
+            this.lblMail.Location = new System.Drawing.Point(12, 87);
+            this.lblMail.Name = "lblMail";
+            this.lblMail.Size = new System.Drawing.Size(34, 13);
+            this.lblMail.TabIndex = 5;
+            this.lblMail.Text = "e-mail";
+            // 
             // EcranAjouterClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(234, 141);
+            this.ClientSize = new System.Drawing.Size(234, 172);
+            this.Controls.Add(this.tbMail);
+            this.Controls.Add(this.lblMail);
             this.Controls.Add(this.btnConfirmer);
             this.Controls.Add(this.tbPrenom);
             this.Controls.Add(this.lblPrenom);
@@ -107,5 +127,7 @@
         private System.Windows.Forms.TextBox tbPrenom;
         private System.Windows.Forms.Label lblPrenom;
         private System.Windows.Forms.Button btnConfirmer;
+        private System.Windows.Forms.TextBox tbMail;
+        private System.Windows.Forms.Label lblMail;
     }
 }

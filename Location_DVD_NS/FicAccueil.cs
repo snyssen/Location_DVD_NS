@@ -315,20 +315,95 @@ namespace Location_DVD_NS
         #region Boutons
         private void btnAjouterEmprunt_Click(object sender, EventArgs e)
         {
-            EcranAjouterEmprunt ajoutemprunt = new EcranAjouterEmprunt(this.sChConn, dgvClients.SelectedRows.Count == 1 ? (int)dgvClients.SelectedRows[0].Cells[0].Value : -1);
-            ajoutemprunt.ShowDialog();
-            if (ajoutemprunt.Confirmed)
+            //EcranAjouterEmprunt ajoutemprunt = new EcranAjouterEmprunt(this.sChConn, dgvClients.SelectedRows.Count == 1 ? (int)dgvClients.SelectedRows[0].Cells[0].Value : -1);
+            //ajoutemprunt.ShowDialog();
+            //if (ajoutemprunt.Confirmed)
+            //{
+            //    int nID = new G_T_Emprunt(sChConn).Ajouter(ajoutemprunt.IDClientEmprunt, DateTime.Today);
+            //    foreach (int ID in ajoutemprunt.Liste_ID_DVD_Emprunt)
+            //    {
+            //        new G_T_Quantite(sChConn).Ajouter(nID, ID, null);
+            //        C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID(ID);
+            //        new G_T_DVD(sChConn).Modifier(ID, TmpDVD.D_Nom, true, TmpDVD.D_Genre, TmpDVD.D_Emprunt_Max, TmpDVD.D_Amende_p_J, TmpDVD.D_Synopsis);
+            //    }
+            //    if (MessageBox.Show("Souhaitez-vous générer un bordereau d'emprunt ?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            //        GenererBordereauPlainText(ajoutemprunt.IDClientEmprunt, ajoutemprunt.Liste_ID_DVD_Emprunt, nID);
+            //    RemplirDGV();
+            //}
+
+            if (dgvClients.SelectedRows.Count <= 0 || dgvClients.SelectedRows.Count > 1)
+                MessageBox.Show("Veuillez ne sélectionner qu'un seul et unique client pour générer un nouvel emprunt !");
+            else
             {
-                int nID = new G_T_Emprunt(sChConn).Ajouter(ajoutemprunt.IDClientEmprunt, DateTime.Today);
-                foreach (int ID in ajoutemprunt.Liste_ID_DVD_Emprunt)
+                if (dgvDVD.SelectedRows.Count <= 0)
+                    MessageBox.Show("Veuillez sélectionner au moins un DVD pour générer un nouvel emprunt !");
+                else
                 {
-                    new G_T_Quantite(sChConn).Ajouter(nID, ID, null);
-                    C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID(ID);
-                    new G_T_DVD(sChConn).Modifier(ID, TmpDVD.D_Nom, true, TmpDVD.D_Genre, TmpDVD.D_Emprunt_Max, TmpDVD.D_Amende_p_J, TmpDVD.D_Synopsis);
+                    if (CalculerRetardCot((DateTime)dgvClients.SelectedRows[0].Cells[4].Value))
+                        MessageBox.Show("Ce client est en retard de cotisation et ne peut donc pas effectuer d'emprunt !");
+                    else
+                    {
+                        if (CalculerAmende((int)dgvClients.SelectedRows[0].Cells[0].Value) > 0)
+                        {
+                            if (MessageBox.Show("Ce client est en retard de rentrée d'un DVD, voulez-vous tout de même le laisser faire cet emprunt ?", "Demande de confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                            {
+                                bool Erreur = false;
+                                foreach (DataGridViewRow Row in dgvDVD.SelectedRows)
+                                {
+                                    if (Row.Cells[2].Value.ToString() == "Non")
+                                    {
+                                        Erreur = true;
+                                        MessageBox.Show("Un des DVD sélectionnés n'est pas disponible !");
+                                        break;
+                                    }
+                                }
+                                if (!Erreur)
+                                {
+                                    int nID = new G_T_Emprunt(sChConn).Ajouter((int)dgvClients.SelectedRows[0].Cells[0].Value, DateTime.Today);
+                                    List<int> lIDDVD = new List<int>();
+                                    foreach (DataGridViewRow Row in dgvDVD.SelectedRows)
+                                    {
+                                        new G_T_Quantite(sChConn).Ajouter(nID, (int)Row.Cells[0].Value, null);
+                                        C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID((int)Row.Cells[0].Value);
+                                        new G_T_DVD(sChConn).Modifier(TmpDVD.Id_DVD, TmpDVD.D_Nom, true, TmpDVD.D_Genre, TmpDVD.D_Emprunt_Max, TmpDVD.D_Amende_p_J, TmpDVD.D_Synopsis);
+                                        lIDDVD.Add(TmpDVD.Id_DVD);
+                                    }
+                                    if (MessageBox.Show("Souhaitez-vous générer un bordereau d'emprunt ?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                        GenererBordereauPlainText((int)dgvClients.SelectedRows[0].Cells[0].Value, lIDDVD, nID);
+                                    MessageBox.Show(lIDDVD.Count + " DVDs empruntés !");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            bool Erreur = false;
+                            foreach (DataGridViewRow Row in dgvDVD.SelectedRows)
+                            {
+                                if (Row.Cells[2].Value.ToString() == "Non")
+                                {
+                                    Erreur = true;
+                                    MessageBox.Show("Un des DVD sélectionnés n'est pas disponible !");
+                                    break;
+                                }
+                            }
+                            if (!Erreur)
+                            {
+                                int nID = new G_T_Emprunt(sChConn).Ajouter((int)dgvClients.SelectedRows[0].Cells[0].Value, DateTime.Today);
+                                List<int> lIDDVD = new List<int>();
+                                foreach (DataGridViewRow Row in dgvDVD.SelectedRows)
+                                {
+                                    new G_T_Quantite(sChConn).Ajouter(nID, (int)Row.Cells[0].Value, null);
+                                    C_T_DVD TmpDVD = new G_T_DVD(sChConn).Lire_ID((int)Row.Cells[0].Value);
+                                    new G_T_DVD(sChConn).Modifier(TmpDVD.Id_DVD, TmpDVD.D_Nom, true, TmpDVD.D_Genre, TmpDVD.D_Emprunt_Max, TmpDVD.D_Amende_p_J, TmpDVD.D_Synopsis);
+                                    lIDDVD.Add(TmpDVD.Id_DVD);
+                                }
+                                if (MessageBox.Show("Souhaitez-vous générer un bordereau d'emprunt ?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                    GenererBordereauPlainText((int)dgvClients.SelectedRows[0].Cells[0].Value, lIDDVD, nID);
+                                MessageBox.Show(lIDDVD.Count + " DVDs empruntés !");
+                            }
+                        }
+                    }
                 }
-                if (MessageBox.Show("Souhaitez-vous générer un bordereau d'emprunt ?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    GenererBordereauPlainText(ajoutemprunt.IDClientEmprunt, ajoutemprunt.Liste_ID_DVD_Emprunt, nID);
-                RemplirDGV();
             }
         }
 
@@ -382,7 +457,7 @@ namespace Location_DVD_NS
                 }
                 if (!Doublon)
                 {
-                    int nID = new G_T_Client(sChConn).Ajouter(ajoutclient.NomClient, ajoutclient.PrenomClient, ajoutclient.DateCotisation);
+                    int nID = new G_T_Client(sChConn).Ajouter(ajoutclient.NomClient, ajoutclient.PrenomClient, ajoutclient.DateCotisation, ajoutclient.MailClient);
                     dtClients.Rows.Add(nID, ajoutclient.NomClient, ajoutclient.PrenomClient);
                     RemplirDGVClient();
 
@@ -456,7 +531,7 @@ namespace Location_DVD_NS
             string result = "Cotisation payée ce " + DateTime.Today.ToShortDateString() + " pour :\n";
             for (i = 0;  i < dgvClients.SelectedRows.Count; i++)
             {
-                new G_T_Client(sChConn).Modifier((int)dgvClients.SelectedRows[i].Cells[0].Value, dgvClients.SelectedRows[i].Cells[1].Value.ToString(), dgvClients.SelectedRows[i].Cells[2].Value.ToString(), DateTime.Today);
+                new G_T_Client(sChConn).Modifier((int)dgvClients.SelectedRows[i].Cells[0].Value, dgvClients.SelectedRows[i].Cells[1].Value.ToString(), dgvClients.SelectedRows[i].Cells[2].Value.ToString(), DateTime.Today, dgvClients.SelectedRows[i].Cells[3].Value.ToString());
                 result += dgvClients.SelectedRows[i].Cells[1].Value.ToString() + " " + dgvClients.SelectedRows[i].Cells[2].Value.ToString() + "\n";
             }
             if (i > 0)
@@ -489,6 +564,12 @@ namespace Location_DVD_NS
             System.Diagnostics.Process.Start("https://github.com/snyssen");
             llblCopyright.LinkVisited = true;
         }
+
+        private void btnTendances_Click(object sender, EventArgs e)
+        {
+            EcranTendances tendances = new EcranTendances(sChConn);
+            tendances.ShowDialog();
+        }
         #endregion
         #endregion
 
@@ -508,6 +589,7 @@ namespace Location_DVD_NS
             dtClients.Columns.Add(new DataColumn("ID", System.Type.GetType("System.Int32")));
             dtClients.Columns.Add("Nom");
             dtClients.Columns.Add("Prénom");
+            dtClients.Columns.Add("e-mail");
             dtClients.Columns.Add(new DataColumn("Dernier paiement cotisation", System.Type.GetType("System.DateTime")));
             dtClients.Columns.Add("Retard(s)");
             List<C_T_Client> lTmpClient = new G_T_Client(sChConn).Lire("C_Nom");
@@ -522,7 +604,7 @@ namespace Location_DVD_NS
                     retard = "Retour";
                 else
                     retard = "Non";
-                dtClients.Rows.Add(TmpClient.Id_Client, TmpClient.C_Nom, TmpClient.C_Prenom, TmpClient.C_Cotisation, retard);
+                dtClients.Rows.Add(TmpClient.Id_Client, TmpClient.C_Nom, TmpClient.C_Prenom, TmpClient.C_Mail, TmpClient.C_Cotisation, retard);
             }
             bsClients = new BindingSource();
             bsClients.DataSource = dtClients;

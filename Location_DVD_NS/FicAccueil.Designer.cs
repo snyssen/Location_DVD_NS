@@ -43,6 +43,7 @@
             this.rbtnFCRetards = new System.Windows.Forms.RadioButton();
             this.rbtnFCTous = new System.Windows.Forms.RadioButton();
             this.pFiltreDVD = new System.Windows.Forms.Panel();
+            this.llblCopyright = new System.Windows.Forms.LinkLabel();
             this.lblFiltreDVD = new System.Windows.Forms.Label();
             this.rbtnFDPret = new System.Windows.Forms.RadioButton();
             this.rbtnFDDispos = new System.Windows.Forms.RadioButton();
@@ -63,10 +64,10 @@
             this.lbldgvActeurs = new System.Windows.Forms.Label();
             this.lbldgvDVDSelectEmprunt = new System.Windows.Forms.Label();
             this.lbldgvEmprunts = new System.Windows.Forms.Label();
-            this.btnNotifications = new Location_DVD_NS.NotificationButton();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.llblCopyright = new System.Windows.Forms.LinkLabel();
+            this.btnTendances = new System.Windows.Forms.Button();
+            this.btnNotifications = new Location_DVD_NS.NotificationButton();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClients)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDVD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmprunts)).BeginInit();
@@ -268,6 +269,17 @@
             this.pFiltreDVD.Size = new System.Drawing.Size(155, 222);
             this.pFiltreDVD.TabIndex = 5;
             // 
+            // llblCopyright
+            // 
+            this.llblCopyright.AutoSize = true;
+            this.llblCopyright.Location = new System.Drawing.Point(0, 205);
+            this.llblCopyright.Name = "llblCopyright";
+            this.llblCopyright.Size = new System.Drawing.Size(86, 13);
+            this.llblCopyright.TabIndex = 23;
+            this.llblCopyright.TabStop = true;
+            this.llblCopyright.Text = "© Simon Nyssen";
+            this.llblCopyright.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblCopyright_LinkClicked);
+            // 
             // lblFiltreDVD
             // 
             this.lblFiltreDVD.AutoSize = true;
@@ -466,21 +478,6 @@
             this.lbldgvEmprunts.TabIndex = 20;
             this.lbldgvEmprunts.Text = "Emprunts";
             // 
-            // btnNotifications
-            // 
-            this.btnNotifications.ExteriorColor = System.Drawing.Color.DarkRed;
-            this.btnNotifications.InteriorColor = System.Drawing.Color.OrangeRed;
-            this.btnNotifications.Location = new System.Drawing.Point(482, 421);
-            this.btnNotifications.Name = "btnNotifications";
-            this.btnNotifications.NotificationEnabled = true;
-            this.btnNotifications.NotificationNbr = 0;
-            this.btnNotifications.NumberColor = System.Drawing.Color.White;
-            this.btnNotifications.Size = new System.Drawing.Size(300, 44);
-            this.btnNotifications.TabIndex = 14;
-            this.btnNotifications.Text = "Notifications";
-            this.btnNotifications.UseVisualStyleBackColor = true;
-            this.btnNotifications.Click += new System.EventHandler(this.btnNotifications_Click);
-            // 
             // btnRefresh
             // 
             this.btnRefresh.Image = global::Location_DVD_NS.Properties.Resources.Refresh_32x32;
@@ -501,22 +498,37 @@
             this.pictureBox1.TabIndex = 21;
             this.pictureBox1.TabStop = false;
             // 
-            // llblCopyright
+            // btnTendances
             // 
-            this.llblCopyright.AutoSize = true;
-            this.llblCopyright.Location = new System.Drawing.Point(0, 205);
-            this.llblCopyright.Name = "llblCopyright";
-            this.llblCopyright.Size = new System.Drawing.Size(86, 13);
-            this.llblCopyright.TabIndex = 23;
-            this.llblCopyright.TabStop = true;
-            this.llblCopyright.Text = "© Simon Nyssen";
-            this.llblCopyright.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblCopyright_LinkClicked);
+            this.btnTendances.Location = new System.Drawing.Point(788, 285);
+            this.btnTendances.Name = "btnTendances";
+            this.btnTendances.Size = new System.Drawing.Size(300, 33);
+            this.btnTendances.TabIndex = 23;
+            this.btnTendances.Text = "Tendances";
+            this.btnTendances.UseVisualStyleBackColor = true;
+            this.btnTendances.Click += new System.EventHandler(this.btnTendances_Click);
+            // 
+            // btnNotifications
+            // 
+            this.btnNotifications.ExteriorColor = System.Drawing.Color.DarkRed;
+            this.btnNotifications.InteriorColor = System.Drawing.Color.OrangeRed;
+            this.btnNotifications.Location = new System.Drawing.Point(482, 421);
+            this.btnNotifications.Name = "btnNotifications";
+            this.btnNotifications.NotificationEnabled = true;
+            this.btnNotifications.NotificationNbr = 0;
+            this.btnNotifications.NumberColor = System.Drawing.Color.White;
+            this.btnNotifications.Size = new System.Drawing.Size(300, 44);
+            this.btnNotifications.TabIndex = 14;
+            this.btnNotifications.Text = "Notifications";
+            this.btnNotifications.UseVisualStyleBackColor = true;
+            this.btnNotifications.Click += new System.EventHandler(this.btnNotifications_Click);
             // 
             // EcranAccueil
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1100, 555);
+            this.Controls.Add(this.btnTendances);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lbldgvEmprunts);
@@ -603,6 +615,7 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.LinkLabel llblCopyright;
+        private System.Windows.Forms.Button btnTendances;
     }
 }
 

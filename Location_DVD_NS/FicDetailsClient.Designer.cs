@@ -35,6 +35,9 @@
             this.btnConf_Quitter = new System.Windows.Forms.Button();
             this.btnModif_Annul = new System.Windows.Forms.Button();
             this.btnCotisation = new System.Windows.Forms.Button();
+            this.tbMail = new System.Windows.Forms.TextBox();
+            this.lblMail = new System.Windows.Forms.Label();
+            this.llblMail = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // tbPrenom
@@ -73,7 +76,7 @@
             // 
             // btnConf_Quitter
             // 
-            this.btnConf_Quitter.Location = new System.Drawing.Point(12, 166);
+            this.btnConf_Quitter.Location = new System.Drawing.Point(12, 208);
             this.btnConf_Quitter.Name = "btnConf_Quitter";
             this.btnConf_Quitter.Size = new System.Drawing.Size(210, 32);
             this.btnConf_Quitter.TabIndex = 19;
@@ -83,7 +86,7 @@
             // 
             // btnModif_Annul
             // 
-            this.btnModif_Annul.Location = new System.Drawing.Point(12, 128);
+            this.btnModif_Annul.Location = new System.Drawing.Point(12, 170);
             this.btnModif_Annul.Name = "btnModif_Annul";
             this.btnModif_Annul.Size = new System.Drawing.Size(210, 32);
             this.btnModif_Annul.TabIndex = 18;
@@ -93,7 +96,7 @@
             // 
             // btnCotisation
             // 
-            this.btnCotisation.Location = new System.Drawing.Point(12, 90);
+            this.btnCotisation.Location = new System.Drawing.Point(12, 132);
             this.btnCotisation.Name = "btnCotisation";
             this.btnCotisation.Size = new System.Drawing.Size(210, 32);
             this.btnCotisation.TabIndex = 20;
@@ -101,11 +104,42 @@
             this.btnCotisation.UseVisualStyleBackColor = true;
             this.btnCotisation.Click += new System.EventHandler(this.btnCotisation_Click);
             // 
+            // tbMail
+            // 
+            this.tbMail.Enabled = false;
+            this.tbMail.Location = new System.Drawing.Point(12, 103);
+            this.tbMail.Name = "tbMail";
+            this.tbMail.Size = new System.Drawing.Size(210, 20);
+            this.tbMail.TabIndex = 22;
+            // 
+            // lblMail
+            // 
+            this.lblMail.AutoSize = true;
+            this.lblMail.Location = new System.Drawing.Point(12, 87);
+            this.lblMail.Name = "lblMail";
+            this.lblMail.Size = new System.Drawing.Size(34, 13);
+            this.lblMail.TabIndex = 21;
+            this.lblMail.Text = "e-mail";
+            // 
+            // llblMail
+            // 
+            this.llblMail.AutoSize = true;
+            this.llblMail.Location = new System.Drawing.Point(53, 87);
+            this.llblMail.Name = "llblMail";
+            this.llblMail.Size = new System.Drawing.Size(82, 13);
+            this.llblMail.TabIndex = 23;
+            this.llblMail.TabStop = true;
+            this.llblMail.Text = "Envoyer un mail";
+            this.llblMail.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblMail_LinkClicked);
+            // 
             // EcranDetailsClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(234, 210);
+            this.ClientSize = new System.Drawing.Size(234, 252);
+            this.Controls.Add(this.llblMail);
+            this.Controls.Add(this.tbMail);
+            this.Controls.Add(this.lblMail);
             this.Controls.Add(this.btnCotisation);
             this.Controls.Add(this.btnConf_Quitter);
             this.Controls.Add(this.btnModif_Annul);
@@ -134,5 +168,8 @@
         private System.Windows.Forms.Button btnConf_Quitter;
         private System.Windows.Forms.Button btnModif_Annul;
         private System.Windows.Forms.Button btnCotisation;
+        private System.Windows.Forms.TextBox tbMail;
+        private System.Windows.Forms.Label lblMail;
+        private System.Windows.Forms.LinkLabel llblMail;
     }
 }

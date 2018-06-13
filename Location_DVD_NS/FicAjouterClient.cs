@@ -15,6 +15,7 @@ namespace Location_DVD_NS
         public string NomClient;
         public string PrenomClient;
         public DateTime DateCotisation;
+        public string MailClient;
         public bool confirmed = false;
         public EcranAjouterClient()
         {
@@ -23,13 +24,14 @@ namespace Location_DVD_NS
 
         private void btnConfirmer_Click(object sender, EventArgs e)
         {
-            if (tbNom.Text == "" || tbPrenom.Text == "")
+            if (tbNom.Text == "" || tbPrenom.Text == "" || tbMail.Text == "")
                 MessageBox.Show("Veuillez renseigner le nom et le prénom du client SVP !");
             else
             {
                 NomClient = tbNom.Text;
                 PrenomClient = tbPrenom.Text;
                 DateCotisation = DateTime.Today;
+                MailClient = tbMail.Text;
                 confirmed = true;
                 this.Close();
             }
